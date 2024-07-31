@@ -1,0 +1,7 @@
+
+TODO:
+	• Setup simple game flow
+		splash > new game <> game 
+
+2024-07-31
+	• Create project
