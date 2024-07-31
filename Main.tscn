@@ -1,3 +1,219 @@
-[gd_scene format=3 uid="uid://d4ev3rygk1xac"]
+[gd_scene load_steps=12 format=3 uid="uid://d4ev3rygk1xac"]
 
-[node name="Node2D" type="Node2D"]
+[ext_resource type="Script" path="res://Scripts/Overlay.gd" id="1_8j862"]
+[ext_resource type="FontFile" uid="uid://dpia17tudvwf1" path="res://Comfortaa-Bold.ttf" id="1_ivdue"]
+[ext_resource type="Script" path="res://Scripts/Initializer.gd" id="1_vjbns"]
+[ext_resource type="Script" path="res://Scripts/Title.gd" id="3_tf66t"]
+[ext_resource type="PackedScene" uid="uid://cpicny474ru2s" path="res://Cell.tscn" id="4_f2ehu"]
+[ext_resource type="Script" path="res://Scripts/Menu.gd" id="5_6q7iv"]
+[ext_resource type="Texture2D" uid="uid://dfhhnxtq1ojty" path="res://Textures/White16.png" id="6_rm1kv"]
+[ext_resource type="Script" path="res://Game.gd" id="8_aegs5"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_pp82u"]
+font = ExtResource("1_ivdue")
+font_size = 48
+
+[sub_resource type="LabelSettings" id="LabelSettings_3xv05"]
+font = ExtResource("1_ivdue")
+font_size = 28
+
+[sub_resource type="LabelSettings" id="LabelSettings_jhysy"]
+font = ExtResource("1_ivdue")
+font_size = 20
+
+[node name="Node2D" type="Node2D" node_paths=PackedStringArray("m_overlayCanvas", "m_titleCanvas", "m_backgroundCanvas", "m_menuCanvas", "m_rulesCanvas", "m_gameCanvas")]
+script = ExtResource("1_vjbns")
+m_overlayCanvas = NodePath("CanvasLayer_Overlay")
+m_titleCanvas = NodePath("CanvasLayer_Title")
+m_backgroundCanvas = NodePath("CanvasLayer_Background")
+m_menuCanvas = NodePath("CanvasLayer_Menu")
+m_rulesCanvas = NodePath("CanvasLayer_Rules")
+m_gameCanvas = NodePath("CanvasLayer_Game")
+
+[node name="CanvasLayer_Overlay" type="CanvasLayer" parent="."]
+layer = 99
+visible = false
+
+[node name="Overlay" type="ColorRect" parent="CanvasLayer_Overlay" node_paths=PackedStringArray("m_initializer")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.188235, 0.454902, 0.501961, 1)
+script = ExtResource("1_8j862")
+m_initializer = NodePath("../..")
+
+[node name="CanvasLayer_Title" type="CanvasLayer" parent="."]
+layer = 98
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer_Title"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.17, 0.238, 0.25, 1)
+
+[node name="Title" type="Label" parent="CanvasLayer_Title" node_paths=PackedStringArray("m_initializer")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "••• VAULT •••"
+label_settings = SubResource("LabelSettings_pp82u")
+horizontal_alignment = 1
+vertical_alignment = 1
+justification_flags = 0
+script = ExtResource("3_tf66t")
+m_initializer = NodePath("../..")
+
+[node name="Label" type="Label" parent="CanvasLayer_Title/Title"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -50.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Kaeltyk 2024"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CanvasLayer_Background" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer_Background"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.17, 0.238, 0.25, 1)
+
+[node name="Label_Vault" type="Label" parent="CanvasLayer_Background"]
+anchors_preset = -1
+anchor_right = 0.155
+anchor_bottom = 0.093
+offset_left = 30.0
+offset_top = 30.0
+offset_right = -18.56
+offset_bottom = -0.264
+text = "••• VAULT •••"
+label_settings = SubResource("LabelSettings_3xv05")
+justification_flags = 0
+
+[node name="Cell" parent="CanvasLayer_Background" instance=ExtResource("4_f2ehu")]
+visible = false
+offset_left = 201.584
+offset_right = 202.416
+
+[node name="Cell2" parent="CanvasLayer_Background" instance=ExtResource("4_f2ehu")]
+visible = false
+offset_left = 161.584
+offset_right = 162.416
+
+[node name="CanvasLayer_Menu" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_rulesButton", "m_newGameButton", "m_initializer", "m_vaultGame")]
+layer = 2
+script = ExtResource("5_6q7iv")
+m_rulesButton = NodePath("Button_Rules")
+m_newGameButton = NodePath("Button_NewGame")
+m_initializer = NodePath("..")
+m_vaultGame = NodePath("../CanvasLayer_Game")
+
+[node name="Button_NewGame" type="Button" parent="CanvasLayer_Menu"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -62.5
+offset_top = -13.5
+offset_right = 62.5
+offset_bottom = 13.5
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 0
+theme_override_fonts/font = ExtResource("1_ivdue")
+text = "New Game"
+
+[node name="Button_Rules" type="Button" parent="CanvasLayer_Menu"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -41.0
+offset_top = -57.0
+offset_right = 41.0
+offset_bottom = -30.0
+grow_horizontal = 2
+grow_vertical = 0
+focus_mode = 0
+theme_override_fonts/font = ExtResource("1_ivdue")
+text = "Rules"
+
+[node name="CanvasLayer_Rules" type="CanvasLayer" parent="."]
+layer = 3
+visible = false
+
+[node name="NinePatchRect" type="NinePatchRect" parent="CanvasLayer_Rules"]
+self_modulate = Color(0.238, 0.3332, 0.35, 1)
+texture_filter = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 82.0
+offset_top = 78.0
+offset_right = -82.0
+offset_bottom = -78.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+texture = ExtResource("6_rm1kv")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Label_Rules" type="Label" parent="CanvasLayer_Rules/NinePatchRect"]
+layout_mode = 1
+offset_left = 14.0
+offset_top = 14.0
+offset_right = 112.0
+offset_bottom = 37.0
+text = "• RULES •"
+label_settings = SubResource("LabelSettings_jhysy")
+horizontal_alignment = 1
+vertical_alignment = 1
+justification_flags = 0
+
+[node name="TextEdit" type="TextEdit" parent="CanvasLayer_Rules/NinePatchRect"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 29.0
+offset_top = 49.0
+offset_right = -36.0
+offset_bottom = 107.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("1_ivdue")
+text = "Find the Vault code hacking a minimum number of digits.
+Hacking a digit will give a sequence of digits to reach the opposite quadrant of the grid."
+editable = false
+context_menu_enabled = false
+shortcut_keys_enabled = false
+selecting_enabled = false
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+virtual_keyboard_enabled = false
+middle_mouse_paste_enabled = false
+
+[node name="CanvasLayer_Game" type="CanvasLayer" parent="."]
+visible = false
+script = ExtResource("8_aegs5")

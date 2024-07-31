@@ -1,3 +1,6 @@
+Resources:
+	Font: https://fonts.google.com/specimen/Comfortaa/about?preview.text=VAULT%0A123456789%0A%E2%80%A2%20&preview.size=69&preview.layout=grid&classification=Display&stroke=Sans+Serif
+		Confortaa by Johan Aakerlund - Free licence font
 
 TODO:
 	• Setup simple game flow
@@ -5,3 +8,4 @@ TODO:
 
 2024-07-31
 	• Create project
+	• Setup splash + title + cell node + rules

@@ -1,0 +1,104 @@
+[gd_scene load_steps=7 format=3 uid="uid://cpicny474ru2s"]
+
+[ext_resource type="Texture2D" uid="uid://cry24sfsnw5l8" path="res://Textures/NinePatchBox_OnePixelOn16.png" id="1_0u8gh"]
+[ext_resource type="Script" path="res://Scripts/Cell.gd" id="2_06dqg"]
+[ext_resource type="FontFile" uid="uid://dpia17tudvwf1" path="res://Comfortaa-Bold.ttf" id="3_66t2l"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_n2hta"]
+font = ExtResource("3_66t2l")
+font_size = 32
+font_color = Color(0.48, 0.48, 0.48, 1)
+outline_color = Color(0.0338533, 0.0338533, 0.0338533, 1)
+shadow_size = 0
+
+[sub_resource type="LabelSettings" id="LabelSettings_tkmlv"]
+font = ExtResource("3_66t2l")
+font_size = 32
+font_color = Color(7.12335e-06, 0.897821, 0.57038, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_cppna"]
+font = ExtResource("3_66t2l")
+font_size = 32
+
+[node name="NinePatchRect" type="NinePatchRect" node_paths=PackedStringArray("m_unsetLabel", "m_setLabel", "m_guessLabel", "m_button")]
+self_modulate = Color(0.641934, 0.641934, 0.641934, 1)
+texture_filter = 1
+texture_repeat = 1
+anchors_preset = -1
+anchor_left = 0.483
+anchor_top = 0.469
+anchor_right = 0.517
+anchor_bottom = 0.531
+offset_left = -0.416016
+offset_top = 0.0879822
+offset_right = 0.415955
+offset_bottom = -0.0880127
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 16
+texture = ExtResource("1_0u8gh")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+script = ExtResource("2_06dqg")
+m_unsetLabel = NodePath("Label_Unset")
+m_setLabel = NodePath("Label_Set")
+m_guessLabel = NodePath("Label_Guess")
+m_button = NodePath("Button")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 0
+
+[node name="Label_Unset" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 3.0
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "?"
+label_settings = SubResource("LabelSettings_n2hta")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label_Set" type="Label" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 3.0
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "9"
+label_settings = SubResource("LabelSettings_tkmlv")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label_Guess" type="Label" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 3.0
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "9"
+label_settings = SubResource("LabelSettings_cppna")
+horizontal_alignment = 1
+vertical_alignment = 1
