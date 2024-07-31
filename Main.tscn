@@ -3,38 +3,38 @@
 [ext_resource type="Script" path="res://Scripts/Overlay.gd" id="1_8j862"]
 [ext_resource type="FontFile" uid="uid://dpia17tudvwf1" path="res://Comfortaa-Bold.ttf" id="1_ivdue"]
 [ext_resource type="Script" path="res://Scripts/Initializer.gd" id="1_vjbns"]
+[ext_resource type="LabelSettings" uid="uid://bspekmsvysonp" path="res://LabelSetting_Title.tres" id="3_l2f2k"]
 [ext_resource type="Script" path="res://Scripts/Title.gd" id="3_tf66t"]
 [ext_resource type="PackedScene" uid="uid://cpicny474ru2s" path="res://Cell.tscn" id="4_f2ehu"]
 [ext_resource type="Script" path="res://Scripts/Menu.gd" id="5_6q7iv"]
 [ext_resource type="Texture2D" uid="uid://dfhhnxtq1ojty" path="res://Textures/White16.png" id="6_rm1kv"]
 [ext_resource type="Script" path="res://Game.gd" id="8_aegs5"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_pp82u"]
-font = ExtResource("1_ivdue")
-font_size = 48
-
 [sub_resource type="LabelSettings" id="LabelSettings_3xv05"]
 font = ExtResource("1_ivdue")
-font_size = 28
+font_size = 36
 
 [sub_resource type="LabelSettings" id="LabelSettings_jhysy"]
 font = ExtResource("1_ivdue")
-font_size = 20
+font_size = 36
 
-[node name="Node2D" type="Node2D" node_paths=PackedStringArray("m_overlayCanvas", "m_titleCanvas", "m_backgroundCanvas", "m_menuCanvas", "m_rulesCanvas", "m_gameCanvas")]
+[node name="RootInitializer" type="Node2D"]
 script = ExtResource("1_vjbns")
-m_overlayCanvas = NodePath("CanvasLayer_Overlay")
-m_titleCanvas = NodePath("CanvasLayer_Title")
-m_backgroundCanvas = NodePath("CanvasLayer_Background")
-m_menuCanvas = NodePath("CanvasLayer_Menu")
-m_rulesCanvas = NodePath("CanvasLayer_Rules")
-m_gameCanvas = NodePath("CanvasLayer_Game")
 
 [node name="CanvasLayer_Overlay" type="CanvasLayer" parent="."]
 layer = 99
 visible = false
 
-[node name="Overlay" type="ColorRect" parent="CanvasLayer_Overlay" node_paths=PackedStringArray("m_initializer")]
+[node name="Control" type="Control" parent="CanvasLayer_Overlay"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Overlay" type="ColorRect" parent="CanvasLayer_Overlay/Control" node_paths=PackedStringArray("m_initializer")]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -42,13 +42,22 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.188235, 0.454902, 0.501961, 1)
 script = ExtResource("1_8j862")
-m_initializer = NodePath("../..")
+m_initializer = NodePath("../../..")
 
 [node name="CanvasLayer_Title" type="CanvasLayer" parent="."]
 layer = 98
 visible = false
 
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer_Title"]
+[node name="Control" type="Control" parent="CanvasLayer_Title"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer_Title/Control"]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -56,21 +65,22 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.17, 0.238, 0.25, 1)
 
-[node name="Title" type="Label" parent="CanvasLayer_Title" node_paths=PackedStringArray("m_initializer")]
+[node name="Title" type="Label" parent="CanvasLayer_Title/Control" node_paths=PackedStringArray("m_initializer")]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "••• VAULT •••"
-label_settings = SubResource("LabelSettings_pp82u")
+label_settings = ExtResource("3_l2f2k")
 horizontal_alignment = 1
 vertical_alignment = 1
 justification_flags = 0
 script = ExtResource("3_tf66t")
-m_initializer = NodePath("../..")
+m_initializer = NodePath("../../..")
 
-[node name="Label" type="Label" parent="CanvasLayer_Title/Title"]
+[node name="Label" type="Label" parent="CanvasLayer_Title/Control/Title"]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -86,7 +96,16 @@ vertical_alignment = 1
 [node name="CanvasLayer_Background" type="CanvasLayer" parent="."]
 layer = -1
 
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer_Background"]
+[node name="Control" type="Control" parent="CanvasLayer_Background"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer_Background/Control"]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -94,82 +113,111 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.17, 0.238, 0.25, 1)
 
-[node name="Label_Vault" type="Label" parent="CanvasLayer_Background"]
-anchors_preset = -1
-anchor_right = 0.155
-anchor_bottom = 0.093
-offset_left = 30.0
-offset_top = 30.0
-offset_right = -18.56
-offset_bottom = -0.264
+[node name="Label_Vault" type="Label" parent="CanvasLayer_Background/Control"]
+layout_mode = 1
+offset_left = 32.0
+offset_top = 32.0
+offset_right = 209.0
+offset_bottom = 64.0
 text = "••• VAULT •••"
 label_settings = SubResource("LabelSettings_3xv05")
 justification_flags = 0
 
-[node name="Cell" parent="CanvasLayer_Background" instance=ExtResource("4_f2ehu")]
+[node name="Cell" parent="CanvasLayer_Background/Control" instance=ExtResource("4_f2ehu")]
 visible = false
-offset_left = 201.584
-offset_right = 202.416
+layout_mode = 1
+offset_left = 631.64
+offset_top = 285.48
+offset_right = 634.28
+offset_bottom = 287.0
 
-[node name="Cell2" parent="CanvasLayer_Background" instance=ExtResource("4_f2ehu")]
+[node name="Cell2" parent="CanvasLayer_Background/Control" instance=ExtResource("4_f2ehu")]
 visible = false
-offset_left = 161.584
-offset_right = 162.416
+layout_mode = 1
+offset_left = 699.64
+offset_top = 285.48
+offset_right = 702.28
+offset_bottom = 287.0
 
 [node name="CanvasLayer_Menu" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_rulesButton", "m_newGameButton", "m_initializer", "m_vaultGame")]
 layer = 2
+visible = false
 script = ExtResource("5_6q7iv")
-m_rulesButton = NodePath("Button_Rules")
-m_newGameButton = NodePath("Button_NewGame")
+m_rulesButton = NodePath("Control/Button_Rules")
+m_newGameButton = NodePath("Control/Button_NewGame")
 m_initializer = NodePath("..")
 m_vaultGame = NodePath("../CanvasLayer_Game")
 
-[node name="Button_NewGame" type="Button" parent="CanvasLayer_Menu"]
+[node name="Control" type="Control" parent="CanvasLayer_Menu"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Button_NewGame" type="Button" parent="CanvasLayer_Menu/Control"]
+layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -62.5
-offset_top = -13.5
-offset_right = 62.5
-offset_bottom = 13.5
+offset_left = -100.0
+offset_top = -18.0
+offset_right = 100.0
+offset_bottom = 18.0
 grow_horizontal = 2
 grow_vertical = 2
 focus_mode = 0
 theme_override_fonts/font = ExtResource("1_ivdue")
+theme_override_font_sizes/font_size = 24
 text = "New Game"
 
-[node name="Button_Rules" type="Button" parent="CanvasLayer_Menu"]
+[node name="Button_Rules" type="Button" parent="CanvasLayer_Menu/Control"]
+layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -41.0
-offset_top = -57.0
-offset_right = 41.0
-offset_bottom = -30.0
+offset_left = -66.0
+offset_top = -68.0
+offset_right = 66.0
+offset_bottom = -32.0
 grow_horizontal = 2
 grow_vertical = 0
 focus_mode = 0
 theme_override_fonts/font = ExtResource("1_ivdue")
+theme_override_font_sizes/font_size = 24
 text = "Rules"
 
 [node name="CanvasLayer_Rules" type="CanvasLayer" parent="."]
 layer = 3
 visible = false
 
-[node name="NinePatchRect" type="NinePatchRect" parent="CanvasLayer_Rules"]
-self_modulate = Color(0.238, 0.3332, 0.35, 1)
-texture_filter = 1
+[node name="Control" type="Control" parent="CanvasLayer_Rules"]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 82.0
-offset_top = 78.0
-offset_right = -82.0
-offset_bottom = -78.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="CanvasLayer_Rules/Control"]
+self_modulate = Color(0.238, 0.3332, 0.35, 1)
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -860.0
+offset_top = -440.0
+offset_right = 860.0
+offset_bottom = 440.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
@@ -181,28 +229,31 @@ patch_margin_bottom = 2
 axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
 
-[node name="Label_Rules" type="Label" parent="CanvasLayer_Rules/NinePatchRect"]
+[node name="Label_Rules" type="Label" parent="CanvasLayer_Rules/Control/NinePatchRect"]
 layout_mode = 1
-offset_left = 14.0
-offset_top = 14.0
-offset_right = 112.0
-offset_bottom = 37.0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 114.0
+offset_bottom = 39.0
 text = "• RULES •"
 label_settings = SubResource("LabelSettings_jhysy")
 horizontal_alignment = 1
 vertical_alignment = 1
 justification_flags = 0
 
-[node name="TextEdit" type="TextEdit" parent="CanvasLayer_Rules/NinePatchRect"]
+[node name="TextEdit" type="TextEdit" parent="CanvasLayer_Rules/Control/NinePatchRect"]
+custom_minimum_size = Vector2(820, 0)
 layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_left = 29.0
-offset_top = 49.0
-offset_right = -36.0
-offset_bottom = 107.0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -810.0
+offset_top = 82.0
+offset_right = 810.0
+offset_bottom = 178.0
 grow_horizontal = 2
 theme_override_fonts/font = ExtResource("1_ivdue")
+theme_override_font_sizes/font_size = 32
 text = "Find the Vault code hacking a minimum number of digits.
 Hacking a digit will give a sequence of digits to reach the opposite quadrant of the grid."
 editable = false
@@ -214,6 +265,16 @@ drag_and_drop_selection_enabled = false
 virtual_keyboard_enabled = false
 middle_mouse_paste_enabled = false
 
-[node name="CanvasLayer_Game" type="CanvasLayer" parent="."]
-visible = false
+[node name="CanvasLayer_Game" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_boardControl")]
+unique_name_in_owner = true
 script = ExtResource("8_aegs5")
+m_cellScene = ExtResource("4_f2ehu")
+m_boardControl = NodePath("Control")
+
+[node name="Control" type="Control" parent="CanvasLayer_Game"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

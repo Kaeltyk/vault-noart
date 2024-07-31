@@ -1,40 +1,15 @@
-[gd_scene load_steps=7 format=3 uid="uid://cpicny474ru2s"]
+[gd_scene load_steps=4 format=3 uid="uid://cpicny474ru2s"]
 
 [ext_resource type="Texture2D" uid="uid://cry24sfsnw5l8" path="res://Textures/NinePatchBox_OnePixelOn16.png" id="1_0u8gh"]
 [ext_resource type="Script" path="res://Scripts/Cell.gd" id="2_06dqg"]
-[ext_resource type="FontFile" uid="uid://dpia17tudvwf1" path="res://Comfortaa-Bold.ttf" id="3_66t2l"]
+[ext_resource type="Theme" uid="uid://dj5rm07ftvajr" path="res://Theme_Cell.tres" id="3_7hkqm"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_n2hta"]
-font = ExtResource("3_66t2l")
-font_size = 32
-font_color = Color(0.48, 0.48, 0.48, 1)
-outline_color = Color(0.0338533, 0.0338533, 0.0338533, 1)
-shadow_size = 0
-
-[sub_resource type="LabelSettings" id="LabelSettings_tkmlv"]
-font = ExtResource("3_66t2l")
-font_size = 32
-font_color = Color(7.12335e-06, 0.897821, 0.57038, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_cppna"]
-font = ExtResource("3_66t2l")
-font_size = 32
-
-[node name="NinePatchRect" type="NinePatchRect" node_paths=PackedStringArray("m_unsetLabel", "m_setLabel", "m_guessLabel", "m_button")]
+[node name="Cell" type="NinePatchRect" node_paths=PackedStringArray("m_unsetLabel", "m_setLabel", "m_guessLabel", "m_button")]
 self_modulate = Color(0.641934, 0.641934, 0.641934, 1)
 texture_filter = 1
 texture_repeat = 1
-anchors_preset = -1
-anchor_left = 0.483
-anchor_top = 0.469
-anchor_right = 0.517
-anchor_bottom = 0.531
-offset_left = -0.416016
-offset_top = 0.0879822
-offset_right = 0.415955
-offset_bottom = -0.0880127
-grow_horizontal = 2
-grow_vertical = 2
+offset_right = 64.0
+offset_bottom = 64.0
 mouse_filter = 0
 mouse_default_cursor_shape = 16
 texture = ExtResource("1_0u8gh")
@@ -58,18 +33,18 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 focus_mode = 0
+button_mask = 3
 
 [node name="Label_Unset" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 3.0
-offset_bottom = 3.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("3_7hkqm")
+theme_override_colors/font_color = Color(0.5, 0.5, 0.5, 1)
 text = "?"
-label_settings = SubResource("LabelSettings_n2hta")
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -79,12 +54,11 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 3.0
-offset_bottom = 3.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("3_7hkqm")
+theme_override_colors/font_color = Color(0.263435, 1, 0.659672, 1)
 text = "9"
-label_settings = SubResource("LabelSettings_tkmlv")
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -94,11 +68,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 3.0
-offset_bottom = 3.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("3_7hkqm")
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "9"
-label_settings = SubResource("LabelSettings_cppna")
 horizontal_alignment = 1
 vertical_alignment = 1

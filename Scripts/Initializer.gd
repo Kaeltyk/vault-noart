@@ -1,12 +1,13 @@
 class_name Initializer
 extends Node2D
 
-@export var m_overlayCanvas:CanvasLayer
-@export var m_titleCanvas:CanvasLayer
-@export var m_backgroundCanvas:CanvasLayer
-@export var m_menuCanvas:CanvasLayer
-@export var m_rulesCanvas:CanvasLayer
-@export var m_gameCanvas:CanvasLayer
+# Could be replaced by using unique names & %name in code? (not sure how is handled the _ready order?)
+@onready var m_overlayCanvas:CanvasLayer = $CanvasLayer_Overlay
+@onready var m_titleCanvas:CanvasLayer = $CanvasLayer_Title
+@onready var m_backgroundCanvas:CanvasLayer = $CanvasLayer_Background
+@onready var m_menuCanvas:CanvasLayer = $CanvasLayer_Menu
+@onready var m_rulesCanvas:CanvasLayer = $CanvasLayer_Rules
+@onready var m_gameCanvas:CanvasLayer = $CanvasLayer_Game
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

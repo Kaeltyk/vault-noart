@@ -7,5 +7,6 @@ TODO:
 		splash > new game <> game 
 
 2024-07-31
-	• Create project
+	• Setup game board + spawn cells (parametric size)+ input interactions (guess & reset)
 	• Setup splash + title + cell node + rules
+	• Create project
