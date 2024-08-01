@@ -19,15 +19,17 @@ class CellData:
 	var cellx:int
 	var celly:int
 	var quadrant:int
+	var oppositequadrant:int
 	var value:int
 	var guess:int = -1
 	var codeStr:String = ""
 	var codeSequence:Array[int] = []
-	func _init(_cellRef:Cell, _cellx:int, _celly:int, _cellId:int, _value:int, _quadrant:int) -> void:
+	func _init(_cellRef:Cell, _cellx:int, _celly:int, _cellId:int, _value:int, _quadrant:int, _oppositequadrant:int) -> void:
 		self.cellRef = _cellRef
 		self.cellx = _cellx
 		self.celly = _celly
 		self.quadrant = _quadrant
+		self.oppositequadrant = _oppositequadrant
 		self.cellId = _cellId
 		self.value = _value
 		self.cellState = ECellState.UNSET
@@ -53,6 +55,15 @@ class Bounds2i:
 	var xmax:int
 	var ymin:int
 	var ymax:int
+	func get_rand_vec2i_in_bounds_except(except:Vector2i) -> Vector2i:
+		var x:int = randi_range(xmin, xmax)
+		var y:int = randi_range(ymin, ymax)
+		var safe:int = 99
+		while (x==except.x && y==except.y && safe > 0):
+			safe -= 1
+			x = randi_range(xmin, xmax)
+			y = randi_range(ymin, ymax)
+		return Vector2i(x, y)
 
 class QuadrantData:
 	var xSize:int
@@ -102,25 +113,25 @@ class QuadrantData:
 			xmax = max(xmax, leftXMax)
 			ymin = min(ymin, 0)
 			ymax = max(ymax, topYMax)
-			print("quadrant TL > %s..%s %s..%s" % [xmin, xmax, ymin, ymax])
+			#print("quadrant TL > %s..%s %s..%s" % [xmin, xmax, ymin, ymax])
 		if (quadrant & EQuadrant.TOPRIGHT == EQuadrant.TOPRIGHT):
 			xmin = min(xmin, rightXMin)
 			xmax = max(xmax, xSize-1)
 			ymin = min(ymin, 0)
 			ymax = max(ymax, topYMax)
-			print("quadrant TR > %s..%s %s..%s" % [xmin, xmax, ymin, ymax])
+			#print("quadrant TR > %s..%s %s..%s" % [xmin, xmax, ymin, ymax])
 		if (quadrant & EQuadrant.BOTTOMLEFT == EQuadrant.BOTTOMLEFT):
 			xmin = min(xmin, 0)
 			xmax = max(xmax, leftXMax)
 			ymin = min(ymin, bottomYMin)
 			ymax = max(ymax, ySize-1)
-			print("quadrant BL > %s..%s %s..%s" % [xmin, xmax, ymin, ymax])
+			#print("quadrant BL > %s..%s %s..%s" % [xmin, xmax, ymin, ymax])
 		if (quadrant & EQuadrant.BOTTOMRIGHT == EQuadrant.BOTTOMRIGHT):
 			xmin = min(xmin, rightXMin)
 			xmax = max(xmax, xSize-1)
 			ymin = min(ymin, bottomYMin)
 			ymax = max(ymax, ySize-1)
-			print("quadrant BR > %s..%s %s..%s" % [xmin, xmax, ymin, ymax])
+			#print("quadrant BR > %s..%s %s..%s" % [xmin, xmax, ymin, ymax])
 		lastProcessedBounds.xmin = xmin;
 		lastProcessedBounds.xmax = xmax;
 		lastProcessedBounds.ymin = ymin;
@@ -189,7 +200,9 @@ func start_new_game(xsize:int = 4, ysize:int = 4) -> void:
 			newCell.global_position = Vector2(xtopOffset + x*64.0,ytopOffset + y*64.0)
 			
 			var code:int = randi_range(0, 9)
-			var newCellData:CellData = CellData.new(newCell, x, y, y*boardXSize+x, code, quadrantData.get_quadrant(x,y))
+			var quadrant:int = quadrantData.get_quadrant(x,y)
+			var oppositequadrant:int = quadrantData.get_oppositequadrant(quadrant)
+			var newCellData:CellData = CellData.new(newCell, x, y, y*boardXSize+x, code, quadrant, oppositequadrant)
 
 			allCellDatas.append(newCellData)
 			#print("code value for cell %s is %s" % [(y*boardXSize+x), code])
@@ -276,14 +289,47 @@ func on_cell_hacked(hackedCell:Cell) -> void:
 	update_quadrant_highlight()
 
 func on_cell_clicked(clickedCell:Cell) -> void:
-	var cellData:CellData = get_cellData_from_cell(clickedCell)
-	var cellQuadrant:int = quadrantData.get_quadrant(cellData.cellx, cellData.celly)
+	pass
+	#var cellData:CellData = get_cellData_from_cell(clickedCell)
+	#var cellQuadrant:int = quadrantData.get_quadrant(cellData.cellx, cellData.celly)
 
 func generate_code_for_cell(cellData:CellData) -> void:
-	var targetQuadrant:int = quadrantData.get_oppositequadrant(cellData.quadrant)
+	var targetBounds:Bounds2i = quadrantData.get_quadrant_Bounds2i(cellData.oppositequadrant)
+	var path:Array[Vector2i] = []
+	var cur:Vector2i = Vector2i(cellData.cellx, cellData.celly)
+	var target:Vector2i = targetBounds.get_rand_vec2i_in_bounds_except(cur) # Vector2i(cellData.cellx, cellData.celly)
+	var dx:int = 1 if cur.x < target.x else -1 if cur.x > target.x else 0
+	var dy:int = 1 if cur.y < target.y else -1 if cur.y > target.y else 0
+	#print("generate path from %s > %s, dx=%s dy=%s" % [cur, target, dx, dy])
+	path.append(cur)
+	var safecount:int = boardXSize + boardYSize
+	while (target != cur && safecount > 0):
+		safecount -= 1
+		assert(dx != 0 || dy != 0, "generate_code_for_cell wrong dir?")
+		var xmove:bool = (randf() <= 0.5)
+		if dx == 0: xmove = false
+		if dy == 0: xmove = true
+		if (xmove):
+			cur.x += dx
+			#print("  X move to %s" % cur)
+		else:
+			cur.y += dy
+			#print("  Y move to %s" % cur)
+		path.append(cur)
+		if cur.x == target.x: dx = 0
+		if cur.y == target.y: dy = 0
+	assert(target == cur, "generate_code_for_cell fail")
+	#var dbgpath:String = "path: "
+	#for pathvect in path:
+		#dbgpath += "%s" % pathvect
+	#print(dbgpath)
+	cellData.codeStr = "" # %s" % cellData.value
+	for pathvect:Vector2i in path:
+		var pathcellId:int = pathvect.y*boardXSize + pathvect.x
+		cellData.codeStr += "%s" % allCellDatas[pathcellId].value
+		cellData.codeSequence.append(pathcellId)
+	print("code: %s" % cellData.codeStr)
 	
-	# then walk random path toward target & store digits for the code
-	pass
 
 func get_quadrant_for_cell(cellData:CellData) -> int:
 	return quadrantData.get_quadrant(cellData.cellx, cellData.celly)
@@ -304,12 +350,10 @@ func update_quadrant_highlight() -> void:
 	if (cellData.cellState != ECellState.SET):
 		Helpers.disable_and_hide_node(quadrantHighlight)
 		return
-	var oppositequadrant:int = quadrantData.get_oppositequadrant(cellData.quadrant)
 	Helpers.enable_and_show_node(quadrantHighlight)
 	var xtopOffset:float = 1920/2.0 - 64.0 * (boardXSize/2.0 + 0.5)
 	var ytopOffset:float = 1080/2.0 - 64.0 * (boardYSize/2.0 + 0.5)
-	var bounds:Bounds2i = quadrantData.get_quadrant_Bounds2i(oppositequadrant)
-	#var quadrantXSize = quadrantData.get_quadrant_xsize(oppositequadrant)
+	var bounds:Bounds2i = quadrantData.get_quadrant_Bounds2i(cellData.oppositequadrant)
 	quadrantHighlight.global_position = Vector2(xtopOffset + 64.0*bounds.xmin, ytopOffset + 64.0*bounds.ymin)
 	quadrantHighlight.size = Vector2(64.0*(bounds.xmax-bounds.xmin+1), 64.0*(bounds.ymax-bounds.ymin+1))
 	
