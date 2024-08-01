@@ -3,6 +3,7 @@ extends CanvasLayer
 
 @export var m_cellScene:PackedScene
 @export var m_quadrantHighlightScene:PackedScene
+@export var m_codeLabelScene:PackedScene
 @export var m_boardControl:Control
 @export var m_highlightControl:Control
 
@@ -169,17 +170,23 @@ var resetGuessAutoMode:bool = false
 
 var quadrantHighlight:NinePatchRect
 
+var codeLabel:CodeLabel
+#var lockLabel:bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	quadrantHighlight = m_quadrantHighlightScene.instantiate()
 	m_highlightControl.add_child(quadrantHighlight)
 	Helpers.disable_and_hide_node(quadrantHighlight)
+	
+	codeLabel = m_codeLabelScene.instantiate()
+	m_highlightControl.add_child(codeLabel)
+	Helpers.disable_and_hide_node(codeLabel)
+	
 	#quadrantData = QuadrantData.new(5, 5)
 	#var _quadrantTest:int = quadrantData.get_quadrant(0,0)
 	#_quadrantTest = quadrantData.get_quadrant(4,4)
 	#print("Game Ready!!")
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
@@ -210,6 +217,8 @@ func start_new_game(xsize:int = 4, ysize:int = 4) -> void:
 			m_boardControl.add_child(newCell)
 	#var _result:int = hackedCodes.resize(allCells.size())
 	dbg_log_code()
+	
+	codeLabel.global_position = Vector2(xtopOffset + 64.0, ytopOffset + 64.0 * boardYSize + 64.0)
 
 
 func on_cell_enter(enteredCell: Cell) -> void:
@@ -290,6 +299,17 @@ func on_cell_hacked(hackedCell:Cell) -> void:
 
 func on_cell_clicked(clickedCell:Cell) -> void:
 	pass
+	#if (currentHoveredCell != null):
+		#var cellData:CellData = get_cellData_from_cell(currentHoveredCell)
+		#var canLockLabel:bool = cellData.cellState == ECellState.SET
+		#if (canLockLabel):
+			#lockLabel = true
+			#update_label(cellData)
+		#elif (lockLabel):
+			#lockLabel = false
+			#update_label(null)
+				
+	
 	#var cellData:CellData = get_cellData_from_cell(clickedCell)
 	#var cellQuadrant:int = quadrantData.get_quadrant(cellData.cellx, cellData.celly)
 
@@ -356,4 +376,18 @@ func update_quadrant_highlight() -> void:
 	var bounds:Bounds2i = quadrantData.get_quadrant_Bounds2i(cellData.oppositequadrant)
 	quadrantHighlight.global_position = Vector2(xtopOffset + 64.0*bounds.xmin, ytopOffset + 64.0*bounds.ymin)
 	quadrantHighlight.size = Vector2(64.0*(bounds.xmax-bounds.xmin+1), 64.0*(bounds.ymax-bounds.ymin+1))
+	#if (!lockLabel):
+	update_label(cellData)
+
+func update_label(cellData:CellData) -> void:
+	if (cellData == null):
+		Helpers.disable_and_hide_node(codeLabel)
+		return;
+	Helpers.enable_and_show_node(codeLabel)
+	codeLabel.text = cellData.codeStr
+	codeLabel.line.clear_points()
+	codeLabel.line.add_point(Vector2(0, 0))
+	codeLabel.line.add_point(cellData.cellRef.global_position - codeLabel.global_position + Vector2(8,64-8))
+	#codeLabel.set_anchors_preset(Control.PRESET_TOP_LEFT, true)
+	
 	

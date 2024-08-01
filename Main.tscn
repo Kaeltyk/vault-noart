@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://d4ev3rygk1xac"]
+[gd_scene load_steps=14 format=3 uid="uid://d4ev3rygk1xac"]
 
 [ext_resource type="Script" path="res://Scripts/Overlay.gd" id="1_8j862"]
 [ext_resource type="FontFile" uid="uid://dpia17tudvwf1" path="res://Comfortaa-Bold.ttf" id="1_ivdue"]
@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://dfhhnxtq1ojty" path="res://Textures/White16.png" id="6_rm1kv"]
 [ext_resource type="Script" path="res://Game.gd" id="8_aegs5"]
 [ext_resource type="PackedScene" uid="uid://x6xpexqui1sb" path="res://QuadrantHighlight.tscn" id="10_rpukv"]
+[ext_resource type="PackedScene" uid="uid://bvid0pbuc7dof" path="res://CodeLabel.tscn" id="11_ud5yb"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_3xv05"]
 font = ExtResource("1_ivdue")
@@ -271,6 +272,7 @@ middle_mouse_paste_enabled = false
 script = ExtResource("8_aegs5")
 m_cellScene = ExtResource("4_f2ehu")
 m_quadrantHighlightScene = ExtResource("10_rpukv")
+m_codeLabelScene = ExtResource("11_ud5yb")
 m_boardControl = NodePath("BoardControl")
 m_highlightControl = NodePath("HighlightControl")
 
