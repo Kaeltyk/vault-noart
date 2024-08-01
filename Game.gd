@@ -1,11 +1,14 @@
 class_name VaultGame
 extends CanvasLayer
 
+@export var m_initializer:Initializer
 @export var m_cellScene:PackedScene
 @export var m_quadrantHighlightScene:PackedScene
 @export var m_codeLabelScene:PackedScene
 @export var m_boardControl:Control
 @export var m_highlightControl:Control
+@export var m_menuButton:Button
+@export var m_unlockButton:Button
 
 var boardXSize:int = 3
 var boardYSize:int = 7
@@ -84,7 +87,7 @@ class QuadrantData:
 		rightXMin = int(xSize/2.0) if xSize%2 == 1 else int(xSize/2.0)
 		topYMax = int(ySize/2.0) if ySize%2 == 1 else int(ySize/2.0)-1
 		bottomYMin = int(ySize/2.0) if ySize%2 == 1 else int(ySize/2.0)
-		print("quadrant setup: size %s x %s, XL=0..%s, YT=0..%s, XR=%s..%s, YB=%s..%s" % [xSize, ySize, leftXMax, topYMax, rightXMin, xSize-1, bottomYMin, ySize-1])
+		#print("quadrant setup: size %s x %s, XL=0..%s, YT=0..%s, XR=%s..%s, YB=%s..%s" % [xSize, ySize, leftXMax, topYMax, rightXMin, xSize-1, bottomYMin, ySize-1])
 	func get_quadrant(x:int, y:int) -> int:
 		var result:int = EQuadrant.INVALID
 		if x<=leftXMax:
@@ -94,7 +97,7 @@ class QuadrantData:
 			if y<=topYMax: result |= EQuadrant.TOPRIGHT
 			if y>=bottomYMin: result |= EQuadrant.BOTTOMRIGHT
 		assert(result != EQuadrant.INVALID, "get_quadrant fail")
-		print("quadrant query for %s x %s > %s" % [x, y, result])
+		#print("quadrant query for %s x %s > %s" % [x, y, result])
 		return result
 	func get_oppositequadrant(quadrant:int) -> int:
 		var result:int = EQuadrant.INVALID
@@ -138,28 +141,6 @@ class QuadrantData:
 		lastProcessedBounds.ymin = ymin;
 		lastProcessedBounds.ymax = ymax;
 		return lastProcessedBounds;
-		
-	#func get_quadrant_xsize(quadrant:int) -> int:
-		#var xmin:int = xSize;
-		#var xmax:int = 0;
-		#if (quadrant & EQuadrant.TOPLEFT == EQuadrant.TOPLEFT):
-			#xmin = min(xmin, 0)
-			#xmax = max(xmax, leftXMax)
-			#print("quadrant TL > %s..%s" % [xmin, xmax])
-		#if (quadrant & EQuadrant.TOPRIGHT == EQuadrant.TOPRIGHT):
-			#xmin = min(xmin, rightXMin)
-			#xmax = max(xmax, xSize-1)
-			#print("quadrant TR > %s..%s" % [xmin, xmax])
-		#if (quadrant & EQuadrant.BOTTOMLEFT == EQuadrant.BOTTOMLEFT):
-			#xmin = min(xmin, 0)
-			#xmax = max(xmax, leftXMax)
-			#print("quadrant BL > %s..%s" % [xmin, xmax])
-		#if (quadrant & EQuadrant.BOTTOMRIGHT == EQuadrant.BOTTOMRIGHT):
-			#xmin = min(xmin, rightXMin)
-			#xmax = max(xmax, xSize-1)
-			#print("quadrant BR > %s..%s" % [xmin, xmax])
-		#return xmax - xmin + 1;
-		
 
 #endregion
 
@@ -183,17 +164,39 @@ func _ready() -> void:
 	m_highlightControl.add_child(codeLabel)
 	Helpers.disable_and_hide_node(codeLabel)
 	
+	var _result:int = m_menuButton.pressed.connect(_on_menuButton_pressed)
+	_result = m_unlockButton.pressed.connect(_on_unlockButton_pressed)
+	
 	#quadrantData = QuadrantData.new(5, 5)
 	#var _quadrantTest:int = quadrantData.get_quadrant(0,0)
 	#_quadrantTest = quadrantData.get_quadrant(4,4)
 	#print("Game Ready!!")
 
+func _on_menuButton_pressed() -> void:
+	Helpers.toggle_show_hide_node(m_initializer.m_menuCanvas)
+
+func _on_unlockButton_pressed() -> void:
+	pass
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 	#pass
 
+func clear_old_game() -> void:
+	if (allCellDatas.size() > 0):
+		for cellData:CellData in allCellDatas:
+			Helpers.disable_and_hide_node(cellData.cellRef);
+			cellData.cellRef.queue_free()
+	currentHoveredCell = null
+	allCellDatas.clear();
+	resetGuessAutoMode = false;
+	Helpers.disable_and_hide_node(quadrantHighlight)
+	Helpers.disable_and_hide_node(codeLabel)
+
+
 func start_new_game(xsize:int = 4, ysize:int = 4) -> void:
 	print("Starting new game")
+	clear_old_game()
 	boardXSize = xsize
 	boardYSize = ysize
 	quadrantData = QuadrantData.new(xsize, ysize)
@@ -297,7 +300,7 @@ func on_cell_hacked(hackedCell:Cell) -> void:
 	cellData.set_hacked()
 	update_quadrant_highlight()
 
-func on_cell_clicked(clickedCell:Cell) -> void:
+func on_cell_clicked(_clickedCell:Cell) -> void:
 	pass
 	#if (currentHoveredCell != null):
 		#var cellData:CellData = get_cellData_from_cell(currentHoveredCell)

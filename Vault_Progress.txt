@@ -3,9 +3,13 @@ Resources:
 		Confortaa by Johan Aakerlund - Free licence font
 
 TODO:
-	• code path generation & display
+	• shift help key to display path & possibilities on hacked cell?
+		same key on other cells to display possibilities from existing codes?
+	• display all codes by spreading labels around?
 
 2024-08-01
+	• Clean menu setup, add in-game memnu toggle, updated rules
+	• Add code label for hacked cells on hover
 	• Add target quadrant highlight for hacked cells hovering (clarify multiple quadrants target possibilities)
 	• Setup quadrants (with even-sized boards complexity as a cell can be in multiple quadrants!)
 	• Clean interactions

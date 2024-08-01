@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://d4ev3rygk1xac"]
+[gd_scene load_steps=15 format=3 uid="uid://d4ev3rygk1xac"]
 
 [ext_resource type="Script" path="res://Scripts/Overlay.gd" id="1_8j862"]
 [ext_resource type="FontFile" uid="uid://dpia17tudvwf1" path="res://Comfortaa-Bold.ttf" id="1_ivdue"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://Scripts/Menu.gd" id="5_6q7iv"]
 [ext_resource type="Texture2D" uid="uid://dfhhnxtq1ojty" path="res://Textures/White16.png" id="6_rm1kv"]
 [ext_resource type="Script" path="res://Game.gd" id="8_aegs5"]
+[ext_resource type="Theme" uid="uid://dj5rm07ftvajr" path="res://Theme_Cell.tres" id="8_pna5h"]
 [ext_resource type="PackedScene" uid="uid://x6xpexqui1sb" path="res://QuadrantHighlight.tscn" id="10_rpukv"]
 [ext_resource type="PackedScene" uid="uid://bvid0pbuc7dof" path="res://CodeLabel.tscn" id="11_ud5yb"]
 
@@ -141,12 +142,14 @@ offset_top = 285.48
 offset_right = 702.28
 offset_bottom = 287.0
 
-[node name="CanvasLayer_Menu" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_rulesButton", "m_newGameButton", "m_initializer", "m_vaultGame")]
+[node name="CanvasLayer_Menu" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_rulesButton", "m_new3x3Button", "m_new4x4Button", "m_new5x5Button", "m_initializer", "m_vaultGame")]
 layer = 2
 visible = false
 script = ExtResource("5_6q7iv")
 m_rulesButton = NodePath("Control/Button_Rules")
-m_newGameButton = NodePath("Control/Button_NewGame")
+m_new3x3Button = NodePath("Control/HBoxContainer/Button_3x3")
+m_new4x4Button = NodePath("Control/HBoxContainer/Button_4x4")
+m_new5x5Button = NodePath("Control/HBoxContainer/Button_5x5")
 m_initializer = NodePath("..")
 m_vaultGame = NodePath("../CanvasLayer_Game")
 
@@ -155,26 +158,60 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 86.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Button_NewGame" type="Button" parent="CanvasLayer_Menu/Control"]
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer_Menu/Control"]
+self_modulate = Color(0.215686, 0.301961, 0.317647, 0.862745)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_rm1kv")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer_Menu/Control"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -100.0
-offset_top = -18.0
-offset_right = 100.0
-offset_bottom = 18.0
+offset_left = -152.0
+offset_top = -20.5
+offset_right = 152.0
+offset_bottom = 20.5
 grow_horizontal = 2
 grow_vertical = 2
-focus_mode = 0
-theme_override_fonts/font = ExtResource("1_ivdue")
+
+[node name="Label" type="Label" parent="CanvasLayer_Menu/Control/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("8_pna5h")
 theme_override_font_sizes/font_size = 24
-text = "New Game"
+text = "New Game: "
+
+[node name="Button_3x3" type="Button" parent="CanvasLayer_Menu/Control/HBoxContainer"]
+custom_minimum_size = Vector2(150, 40)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("8_pna5h")
+text = "3x3"
+
+[node name="Button_4x4" type="Button" parent="CanvasLayer_Menu/Control/HBoxContainer"]
+custom_minimum_size = Vector2(150, 40)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("8_pna5h")
+text = "4x4"
+
+[node name="Button_5x5" type="Button" parent="CanvasLayer_Menu/Control/HBoxContainer"]
+custom_minimum_size = Vector2(150, 40)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("8_pna5h")
+text = "5x5"
 
 [node name="Button_Rules" type="Button" parent="CanvasLayer_Menu/Control"]
 layout_mode = 1
@@ -190,8 +227,7 @@ offset_bottom = -32.0
 grow_horizontal = 2
 grow_vertical = 0
 focus_mode = 0
-theme_override_fonts/font = ExtResource("1_ivdue")
-theme_override_font_sizes/font_size = 24
+theme = ExtResource("8_pna5h")
 text = "Rules"
 
 [node name="CanvasLayer_Rules" type="CanvasLayer" parent="."]
@@ -252,13 +288,19 @@ anchor_right = 0.5
 offset_left = -810.0
 offset_top = 82.0
 offset_right = 810.0
-offset_bottom = 178.0
+offset_bottom = 836.0
 grow_horizontal = 2
 theme_override_fonts/font = ExtResource("1_ivdue")
 theme_override_font_sizes/font_size = 32
 text = "Find the Vault code hacking a minimum number of cells.
-Hacking a cell will give a sequence of digits to reach the opposite quadrant of the grid.
-"
+Hacking a cell will give a sequence of digits following one of the most direct paths to reach a random cell in the opposite quadrant.
+
+Right Mouse Button: Hack a cell
+Digits 0-9 (key or numpad) over an unhacked cell: make a guess
+Backspace / numpad -: clear a guess (keep pressed to swipe)
+
+Hover a hacked cell to display the code and the possible quadrant targetted
+Click Unlock to test your solution"
 editable = false
 context_menu_enabled = false
 shortcut_keys_enabled = false
@@ -267,14 +309,19 @@ deselect_on_focus_loss_enabled = false
 drag_and_drop_selection_enabled = false
 virtual_keyboard_enabled = false
 middle_mouse_paste_enabled = false
+wrap_mode = 1
+autowrap_mode = 2
 
-[node name="CanvasLayer_Game" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_boardControl", "m_highlightControl")]
+[node name="CanvasLayer_Game" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_initializer", "m_boardControl", "m_highlightControl", "m_menuButton", "m_unlockButton")]
 script = ExtResource("8_aegs5")
+m_initializer = NodePath("..")
 m_cellScene = ExtResource("4_f2ehu")
 m_quadrantHighlightScene = ExtResource("10_rpukv")
 m_codeLabelScene = ExtResource("11_ud5yb")
 m_boardControl = NodePath("BoardControl")
 m_highlightControl = NodePath("HighlightControl")
+m_menuButton = NodePath("HighlightControl/Button_Menu")
+m_unlockButton = NodePath("HighlightControl/Button_Unlock")
 
 [node name="BoardControl" type="Control" parent="CanvasLayer_Game"]
 layout_mode = 3
@@ -283,9 +330,33 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="HighlightControl" type="Control" parent="CanvasLayer_Game"]
 layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Button_Menu" type="Button" parent="CanvasLayer_Game/HighlightControl"]
+layout_mode = 1
+offset_left = 334.0
+offset_top = 32.0
+offset_right = 443.0
+offset_bottom = 73.0
+focus_mode = 0
+theme = ExtResource("8_pna5h")
+text = "Menu"
+
+[node name="Button_Unlock" type="Button" parent="CanvasLayer_Game/HighlightControl"]
+layout_mode = 1
+offset_left = 334.0
+offset_top = 100.0
+offset_right = 458.0
+offset_bottom = 141.0
+focus_mode = 0
+theme = ExtResource("8_pna5h")
+text = "Unlock"
