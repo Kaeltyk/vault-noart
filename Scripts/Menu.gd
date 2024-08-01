@@ -8,26 +8,26 @@ extends CanvasLayer
 var areRulesDisplayed:bool = false
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready() -> void:
 	assert(m_rulesButton != null, "Menu missing m_rulesButton")
 	assert(m_newGameButton != null, "Menu missing m_newGameButton")
 	assert(m_initializer != null, "Menu missing m_initializer")
 	assert(m_vaultGame != null, "Menu missing m_vaultGame")
-	m_rulesButton.pressed.connect(_on_rulesButton_pressed)
-	m_newGameButton.pressed.connect(_on_newGameButton_pressed)
+	var _result:int = m_rulesButton.pressed.connect(_on_rulesButton_pressed)
+	_result = m_newGameButton.pressed.connect(_on_newGameButton_pressed)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 	#pass
 
-func _on_rulesButton_pressed():
+func _on_rulesButton_pressed() -> void:
 	if ( areRulesDisplayed ):
 		HideRules()
 	else:
 		ShowRules()
 	
-func _on_newGameButton_pressed():
+func _on_newGameButton_pressed() -> void:
 	print("New Game!")
 	Helpers.enable_and_show_node(m_vaultGame)
 	Helpers.disable_and_hide_node(m_initializer.m_menuCanvas)

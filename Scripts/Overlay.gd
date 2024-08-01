@@ -6,12 +6,12 @@ extends ColorRect
 var timer:float
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready() -> void:
 	assert(m_initializer != null, "Missing m_initializer on Overlay")
 	timer = maxf(m_initialTimer, 0.0)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame (ms)
-func _process(delta):
+func _process(delta:float) -> void:
 	if ( timer > 0.0 ):
 		timer -= delta;
 		timer = clampf(timer, 0.0, 1.0)

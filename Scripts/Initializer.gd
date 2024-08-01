@@ -10,7 +10,7 @@ extends Node2D
 @onready var m_gameCanvas:CanvasLayer = $CanvasLayer_Game
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready() -> void:
 	Helpers.enable_and_show_node(m_overlayCanvas)
 	Helpers.enable_and_show_node(m_titleCanvas)
 	Helpers.disable_and_hide_node(m_backgroundCanvas)

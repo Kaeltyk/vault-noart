@@ -254,8 +254,9 @@ offset_bottom = 178.0
 grow_horizontal = 2
 theme_override_fonts/font = ExtResource("1_ivdue")
 theme_override_font_sizes/font_size = 32
-text = "Find the Vault code hacking a minimum number of digits.
-Hacking a digit will give a sequence of digits to reach the opposite quadrant of the grid."
+text = "Find the Vault code hacking a minimum number of cells.
+Hacking a cell will give a sequence of digits to reach the opposite quadrant of the grid.
+"
 editable = false
 context_menu_enabled = false
 shortcut_keys_enabled = false
