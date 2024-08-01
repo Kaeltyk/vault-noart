@@ -3,9 +3,12 @@ Resources:
 		Confortaa by Johan Aakerlund - Free licence font
 
 TODO:
-	• Setup simple game flow
-		splash > new game <> game 
+	• code path generation & display
 
+2024-08-01
+	• Add target quadrant highlight for hacked cells hovering (clarify multiple quadrants target possibilities)
+	• Setup quadrants (with even-sized boards complexity as a cell can be in multiple quadrants!)
+	• Clean interactions
 2024-07-31
 	• Setup game board + spawn cells (parametric size)+ input interactions (guess & reset)
 	• Setup splash + title + cell node + rules

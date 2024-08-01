@@ -2,15 +2,17 @@ class_name VaultGame
 extends CanvasLayer
 
 @export var m_cellScene:PackedScene
+@export var m_quadrantHighlightScene:PackedScene
 @export var m_boardControl:Control
+@export var m_highlightControl:Control
 
 var boardXSize:int = 3
 var boardYSize:int = 7
 
 #region CellData
 
+enum ECellState { UNSET, GUESS, SET, INVALID }
 class CellData:
-	enum ECellState { UNSET, GUESS, SET, INVALID }
 	var cellState:ECellState = ECellState.INVALID
 	var cellRef:Cell
 	var cellId:int
@@ -46,6 +48,12 @@ class CellData:
 #region Quadrant
 # quadrant complexity here comes from the fact we want to support even grids - so a cell can belong to multiple quadrants
 enum EQuadrant { TOPLEFT=1<<0, TOPRIGHT=1<<1, BOTTOMLEFT=1<<2, BOTTOMRIGHT=1<<3, INVALID=0 }
+class Bounds2i:
+	var xmin:int
+	var xmax:int
+	var ymin:int
+	var ymax:int
+
 class QuadrantData:
 	var xSize:int
 	var ySize:int
@@ -53,9 +61,11 @@ class QuadrantData:
 	var topYMax:int
 	var bottomYMin:int
 	var rightXMin:int
+	var lastProcessedBounds:Bounds2i
 	func _init(x:int, y:int) -> void:
 		xSize = x
 		ySize = y
+		lastProcessedBounds = Bounds2i.new()
 		compute_quadrant_limits()
 	func compute_quadrant_limits() -> void:
 		leftXMax = int(xSize/2.0) if xSize%2 == 1 else int(xSize/2.0)-1
@@ -82,7 +92,61 @@ class QuadrantData:
 		if (quadrant & EQuadrant.BOTTOMLEFT == EQuadrant.BOTTOMLEFT): result |= EQuadrant.TOPRIGHT
 		assert(result != EQuadrant.INVALID, "get_oppositequadrant fail")
 		return result
-			
+	func get_quadrant_Bounds2i(quadrant:int) -> Bounds2i:
+		var xmin:int = xSize;
+		var xmax:int = 0;
+		var ymin:int = ySize;
+		var ymax:int = 0;
+		if (quadrant & EQuadrant.TOPLEFT == EQuadrant.TOPLEFT):
+			xmin = min(xmin, 0)
+			xmax = max(xmax, leftXMax)
+			ymin = min(ymin, 0)
+			ymax = max(ymax, topYMax)
+			print("quadrant TL > %s..%s %s..%s" % [xmin, xmax, ymin, ymax])
+		if (quadrant & EQuadrant.TOPRIGHT == EQuadrant.TOPRIGHT):
+			xmin = min(xmin, rightXMin)
+			xmax = max(xmax, xSize-1)
+			ymin = min(ymin, 0)
+			ymax = max(ymax, topYMax)
+			print("quadrant TR > %s..%s %s..%s" % [xmin, xmax, ymin, ymax])
+		if (quadrant & EQuadrant.BOTTOMLEFT == EQuadrant.BOTTOMLEFT):
+			xmin = min(xmin, 0)
+			xmax = max(xmax, leftXMax)
+			ymin = min(ymin, bottomYMin)
+			ymax = max(ymax, ySize-1)
+			print("quadrant BL > %s..%s %s..%s" % [xmin, xmax, ymin, ymax])
+		if (quadrant & EQuadrant.BOTTOMRIGHT == EQuadrant.BOTTOMRIGHT):
+			xmin = min(xmin, rightXMin)
+			xmax = max(xmax, xSize-1)
+			ymin = min(ymin, bottomYMin)
+			ymax = max(ymax, ySize-1)
+			print("quadrant BR > %s..%s %s..%s" % [xmin, xmax, ymin, ymax])
+		lastProcessedBounds.xmin = xmin;
+		lastProcessedBounds.xmax = xmax;
+		lastProcessedBounds.ymin = ymin;
+		lastProcessedBounds.ymax = ymax;
+		return lastProcessedBounds;
+		
+	#func get_quadrant_xsize(quadrant:int) -> int:
+		#var xmin:int = xSize;
+		#var xmax:int = 0;
+		#if (quadrant & EQuadrant.TOPLEFT == EQuadrant.TOPLEFT):
+			#xmin = min(xmin, 0)
+			#xmax = max(xmax, leftXMax)
+			#print("quadrant TL > %s..%s" % [xmin, xmax])
+		#if (quadrant & EQuadrant.TOPRIGHT == EQuadrant.TOPRIGHT):
+			#xmin = min(xmin, rightXMin)
+			#xmax = max(xmax, xSize-1)
+			#print("quadrant TR > %s..%s" % [xmin, xmax])
+		#if (quadrant & EQuadrant.BOTTOMLEFT == EQuadrant.BOTTOMLEFT):
+			#xmin = min(xmin, 0)
+			#xmax = max(xmax, leftXMax)
+			#print("quadrant BL > %s..%s" % [xmin, xmax])
+		#if (quadrant & EQuadrant.BOTTOMRIGHT == EQuadrant.BOTTOMRIGHT):
+			#xmin = min(xmin, rightXMin)
+			#xmax = max(xmax, xSize-1)
+			#print("quadrant BR > %s..%s" % [xmin, xmax])
+		#return xmax - xmin + 1;
 		
 
 #endregion
@@ -90,12 +154,19 @@ class QuadrantData:
 var currentHoveredCell:Cell
 var allCellDatas:Array[CellData] = []
 var quadrantData:QuadrantData
+var resetGuessAutoMode:bool = false
+
+var quadrantHighlight:NinePatchRect
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	quadrantData = QuadrantData.new(5, 5)
-	var _quadrantTest:int = quadrantData.get_quadrant(0,0)
-	_quadrantTest = quadrantData.get_quadrant(4,4)
+	quadrantHighlight = m_quadrantHighlightScene.instantiate()
+	m_highlightControl.add_child(quadrantHighlight)
+	Helpers.disable_and_hide_node(quadrantHighlight)
+	#quadrantData = QuadrantData.new(5, 5)
+	#var _quadrantTest:int = quadrantData.get_quadrant(0,0)
+	#_quadrantTest = quadrantData.get_quadrant(4,4)
 	#print("Game Ready!!")
 
 
@@ -130,12 +201,16 @@ func start_new_game(xsize:int = 4, ysize:int = 4) -> void:
 
 func on_cell_enter(enteredCell: Cell) -> void:
 	currentHoveredCell = enteredCell
+	if (resetGuessAutoMode):
+		reset_guess_if_possible()
+	update_quadrant_highlight()
 	#print("on_cell_enter current cell: %s" % currentHoveredCell.name)
 
 
 func on_cell_exit(exitedCell: Cell) -> void:
 	if (exitedCell == currentHoveredCell):
 		currentHoveredCell = null
+	update_quadrant_highlight()
 	#if (currentHoveredCell != null):
 		#print("on_cell_exit current cell: %s" % currentHoveredCell.name)
 	#else:
@@ -154,27 +229,29 @@ func _input(event:InputEvent) -> void:
 	elif (event.is_action_pressed("ui_seven")):		update_guess_if_possible(7)
 	elif (event.is_action_pressed("ui_eight")):		update_guess_if_possible(8)
 	elif (event.is_action_pressed("ui_nine")):		update_guess_if_possible(9)
-	elif (event.is_action_pressed("ui_guess_reset")):	reset_guess_if_possible()
+	elif (event.is_action_pressed("ui_guess_reset")):
+			reset_guess_if_possible()
+			resetGuessAutoMode = true
+	elif (event.is_action_released("ui_guess_reset")):
+			resetGuessAutoMode = false
 
 func update_guess_if_possible(value:int) -> void:
 	if (currentHoveredCell != null):
 		var cellData:CellData = get_cellData_from_cell(currentHoveredCell)
 		assert(currentHoveredCell == cellData.cellRef, "mismatch: allCellDatas[get_cell_id(cell)] != cell !!")
-		var canSetGuess:bool = cellData.cellState != CellData.ECellState.SET
+		var canSetGuess:bool = cellData.cellState != ECellState.SET
 		if (canSetGuess):
 			cellData.set_guess(value)
-			#currentHoveredCell.set_guess(value)
 	
 func reset_guess_if_possible() -> void:
 	if (currentHoveredCell != null):
 		var cellData:CellData = get_cellData_from_cell(currentHoveredCell)
-		var canResetGuess:bool = cellData.cellState != CellData.ECellState.SET
+		var canResetGuess:bool = cellData.cellState != ECellState.SET
 		if (canResetGuess):
 			cellData.reset_guess()
 
 func get_cell_id(cell:Cell) -> int:
 	for i:int in range(allCellDatas.size()):
-	#for cellData:CellData in allCellDatas:
 		if (allCellDatas[i].cellRef == cell):
 			return i
 	assert(false, "get_cell_id fail!")
@@ -189,20 +266,22 @@ func get_cellData_from_cell(cell:Cell) -> CellData:
 	
 func on_cell_hacked(hackedCell:Cell) -> void:
 	var cellData:CellData = get_cellData_from_cell(hackedCell)
-	var isAlreadyHacked:bool = cellData.cellState == CellData.ECellState.SET # (cellData.codeStr != null && cellData.codeStr != "")
+	var isAlreadyHacked:bool = cellData.cellState == ECellState.SET # (cellData.codeStr != null && cellData.codeStr != "")
 	if (isAlreadyHacked):
 		#print("cell %d already hacked" % cellData.cellId)
 		return
 	generate_code_for_cell(cellData)
-	cellData.cellState = CellData.ECellState.SET
+	cellData.cellState = ECellState.SET
 	cellData.set_hacked()
+	update_quadrant_highlight()
 
 func on_cell_clicked(clickedCell:Cell) -> void:
 	var cellData:CellData = get_cellData_from_cell(clickedCell)
 	var cellQuadrant:int = quadrantData.get_quadrant(cellData.cellx, cellData.celly)
 
 func generate_code_for_cell(cellData:CellData) -> void:
-	# first get cell quadrant so we can get target quadrant
+	var targetQuadrant:int = quadrantData.get_oppositequadrant(cellData.quadrant)
+	
 	# then walk random path toward target & store digits for the code
 	pass
 
@@ -216,4 +295,21 @@ func dbg_log_code() -> void:
 			var cellid:int = y*boardXSize+x
 			logstr = logstr + "%s" % allCellDatas[cellid].value
 		print(logstr)
+	
+func update_quadrant_highlight() -> void:
+	if (currentHoveredCell == null):
+		Helpers.disable_and_hide_node(quadrantHighlight)
+		return
+	var cellData:CellData = get_cellData_from_cell(currentHoveredCell)
+	if (cellData.cellState != ECellState.SET):
+		Helpers.disable_and_hide_node(quadrantHighlight)
+		return
+	var oppositequadrant:int = quadrantData.get_oppositequadrant(cellData.quadrant)
+	Helpers.enable_and_show_node(quadrantHighlight)
+	var xtopOffset:float = 1920/2.0 - 64.0 * (boardXSize/2.0 + 0.5)
+	var ytopOffset:float = 1080/2.0 - 64.0 * (boardYSize/2.0 + 0.5)
+	var bounds:Bounds2i = quadrantData.get_quadrant_Bounds2i(oppositequadrant)
+	#var quadrantXSize = quadrantData.get_quadrant_xsize(oppositequadrant)
+	quadrantHighlight.global_position = Vector2(xtopOffset + 64.0*bounds.xmin, ytopOffset + 64.0*bounds.ymin)
+	quadrantHighlight.size = Vector2(64.0*(bounds.xmax-bounds.xmin+1), 64.0*(bounds.ymax-bounds.ymin+1))
 	

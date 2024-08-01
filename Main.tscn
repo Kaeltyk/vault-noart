@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://d4ev3rygk1xac"]
+[gd_scene load_steps=13 format=3 uid="uid://d4ev3rygk1xac"]
 
 [ext_resource type="Script" path="res://Scripts/Overlay.gd" id="1_8j862"]
 [ext_resource type="FontFile" uid="uid://dpia17tudvwf1" path="res://Comfortaa-Bold.ttf" id="1_ivdue"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://Scripts/Menu.gd" id="5_6q7iv"]
 [ext_resource type="Texture2D" uid="uid://dfhhnxtq1ojty" path="res://Textures/White16.png" id="6_rm1kv"]
 [ext_resource type="Script" path="res://Game.gd" id="8_aegs5"]
+[ext_resource type="PackedScene" uid="uid://x6xpexqui1sb" path="res://QuadrantHighlight.tscn" id="10_rpukv"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_3xv05"]
 font = ExtResource("1_ivdue")
@@ -266,15 +267,23 @@ drag_and_drop_selection_enabled = false
 virtual_keyboard_enabled = false
 middle_mouse_paste_enabled = false
 
-[node name="CanvasLayer_Game" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_boardControl")]
+[node name="CanvasLayer_Game" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_boardControl", "m_highlightControl")]
 script = ExtResource("8_aegs5")
 m_cellScene = ExtResource("4_f2ehu")
-m_boardControl = NodePath("Control")
+m_quadrantHighlightScene = ExtResource("10_rpukv")
+m_boardControl = NodePath("BoardControl")
+m_highlightControl = NodePath("HighlightControl")
 
-[node name="Control" type="Control" parent="CanvasLayer_Game"]
+[node name="BoardControl" type="Control" parent="CanvasLayer_Game"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="HighlightControl" type="Control" parent="CanvasLayer_Game"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
