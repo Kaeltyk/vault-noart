@@ -31,7 +31,7 @@ func _on_newGameButton_pressed() -> void:
 	print("New Game!")
 	Helpers.enable_and_show_node(m_vaultGame)
 	Helpers.disable_and_hide_node(m_initializer.m_menuCanvas)
-	m_vaultGame.start_new_game()
+	m_vaultGame.start_new_game(5, 8)
 	
 
 func ShowRules() -> void:

@@ -267,7 +267,6 @@ virtual_keyboard_enabled = false
 middle_mouse_paste_enabled = false
 
 [node name="CanvasLayer_Game" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_boardControl")]
-unique_name_in_owner = true
 script = ExtResource("8_aegs5")
 m_cellScene = ExtResource("4_f2ehu")
 m_boardControl = NodePath("Control")
