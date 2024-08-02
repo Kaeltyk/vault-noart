@@ -3,6 +3,16 @@ Resources:
 		Confortaa by Johan Aakerlund - Free licence font
 	CC0 License info: https://creativecommons.org/publicdomain/zero/1.0/
 	
+Hint Fill Algo? 
+	each cell fill type have a direction (x = RU, y = RD, z = LD, w = LU) and they process a u/r/d/l in their dominant direction & their same type in the other one
+			u
+		u	Uu
+	x	Xx	XXx
+						  u
+			 x			 wXx
+	O		wOy			lWOYr			
+			 z			 zZy
+						  d
 
 TODO:
 	• shift help key to display path & possibilities on hacked cell?
@@ -13,6 +23,7 @@ NEXT-GEN TODO:
 	• make a mode where hacked cells are already there & enough to decypher the code
 
 2024-08-02
+	• start on clicking a hacked cell & display hints for possible paths/values flooding the grid
 	• Credits page, exclusive with Rules + menu close fix
 	• more game sizes (3x3 > 8x8)
 	• Unlock button / end game process

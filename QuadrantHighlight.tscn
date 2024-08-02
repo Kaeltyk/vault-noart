@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://x6xpexqui1sb"]
 
 [ext_resource type="Texture2D" uid="uid://cry24sfsnw5l8" path="res://Textures/NinePatchBox_OnePixelOn16.png" id="1_psujm"]
+[ext_resource type="Script" path="res://Scripts/QuadrantHighlight.gd" id="2_1wcw5"]
 [ext_resource type="Texture2D" uid="uid://dfhhnxtq1ojty" path="res://Textures/White16.png" id="2_3odj2"]
-[ext_resource type="Script" path="res://QuadrantHighlight.gd" id="2_8pgst"]
 
 [node name="QuadrantHighlight" type="NinePatchRect"]
 self_modulate = Color(0.552941, 0.768627, 0.376471, 0.913725)
@@ -15,7 +15,7 @@ patch_margin_left = 2
 patch_margin_top = 2
 patch_margin_right = 2
 patch_margin_bottom = 2
-script = ExtResource("2_8pgst")
+script = ExtResource("2_1wcw5")
 
 [node name="TextureRect" type="TextureRect" parent="."]
 self_modulate = Color(0.564706, 0.74902, 0.411765, 0.0666667)

@@ -13,137 +13,6 @@ extends CanvasLayer
 var boardXSize:int = 3
 var boardYSize:int = 7
 
-#region CellData
-
-enum ECellState { UNSET, GUESS, SET, INVALID }
-class CellData:
-	var cellState:ECellState = ECellState.INVALID
-	var cellRef:Cell
-	var cellId:int
-	var cellx:int
-	var celly:int
-	var quadrant:int
-	var oppositequadrant:int
-	var value:int
-	var guess:int = -1
-	var codeStr:String = ""
-	var codeSequence:Array[int] = []
-	func _init(_cellRef:Cell, _cellx:int, _celly:int, _cellId:int, _value:int, _quadrant:int, _oppositequadrant:int) -> void:
-		self.cellRef = _cellRef
-		self.cellx = _cellx
-		self.celly = _celly
-		self.quadrant = _quadrant
-		self.oppositequadrant = _oppositequadrant
-		self.cellId = _cellId
-		self.value = _value
-		self.cellState = ECellState.UNSET
-	func set_guess(guessValue:int) -> void:
-		self.guess = guessValue
-		self.cellState = ECellState.GUESS
-		self.cellRef.set_guess(guessValue)
-	func reset_guess() -> void:
-		self.guess = -1
-		self.cellState = ECellState.UNSET
-		self.cellRef.reset_guess()
-	func set_hacked() -> void:
-		self.cellState = ECellState.SET
-		self.cellRef.set_hacked(value)
-
-#endregion
-
-#region Quadrant
-# quadrant complexity here comes from the fact we want to support even grids - so a cell can belong to multiple quadrants
-enum EQuadrant { TOPLEFT=1<<0, TOPRIGHT=1<<1, BOTTOMLEFT=1<<2, BOTTOMRIGHT=1<<3, INVALID=0 }
-class Bounds2i:
-	var xmin:int
-	var xmax:int
-	var ymin:int
-	var ymax:int
-	func get_rand_vec2i_in_bounds_except(except:Vector2i) -> Vector2i:
-		var x:int = randi_range(xmin, xmax)
-		var y:int = randi_range(ymin, ymax)
-		var safe:int = 99
-		while (x==except.x && y==except.y && safe > 0):
-			safe -= 1
-			x = randi_range(xmin, xmax)
-			y = randi_range(ymin, ymax)
-		return Vector2i(x, y)
-
-class QuadrantData:
-	var xSize:int
-	var ySize:int
-	var leftXMax:int
-	var topYMax:int
-	var bottomYMin:int
-	var rightXMin:int
-	var lastProcessedBounds:Bounds2i
-	func _init(x:int, y:int) -> void:
-		xSize = x
-		ySize = y
-		lastProcessedBounds = Bounds2i.new()
-		compute_quadrant_limits()
-	func compute_quadrant_limits() -> void:
-		leftXMax = int(xSize/2.0) if xSize%2 == 1 else int(xSize/2.0)-1
-		rightXMin = int(xSize/2.0) if xSize%2 == 1 else int(xSize/2.0)
-		topYMax = int(ySize/2.0) if ySize%2 == 1 else int(ySize/2.0)-1
-		bottomYMin = int(ySize/2.0) if ySize%2 == 1 else int(ySize/2.0)
-		#print("quadrant setup: size %s x %s, XL=0..%s, YT=0..%s, XR=%s..%s, YB=%s..%s" % [xSize, ySize, leftXMax, topYMax, rightXMin, xSize-1, bottomYMin, ySize-1])
-	func get_quadrant(x:int, y:int) -> int:
-		var result:int = EQuadrant.INVALID
-		if x<=leftXMax:
-			if y<=topYMax: result |= EQuadrant.TOPLEFT
-			if y>=bottomYMin: result |= EQuadrant.BOTTOMLEFT
-		if x>=rightXMin:
-			if y<=topYMax: result |= EQuadrant.TOPRIGHT
-			if y>=bottomYMin: result |= EQuadrant.BOTTOMRIGHT
-		assert(result != EQuadrant.INVALID, "get_quadrant fail")
-		#print("quadrant query for %s x %s > %s" % [x, y, result])
-		return result
-	func get_oppositequadrant(quadrant:int) -> int:
-		var result:int = EQuadrant.INVALID
-		if (quadrant & EQuadrant.TOPLEFT == EQuadrant.TOPLEFT): result |= EQuadrant.BOTTOMRIGHT
-		if (quadrant & EQuadrant.BOTTOMRIGHT == EQuadrant.BOTTOMRIGHT): result |= EQuadrant.TOPLEFT
-		if (quadrant & EQuadrant.TOPRIGHT == EQuadrant.TOPRIGHT): result |= EQuadrant.BOTTOMLEFT
-		if (quadrant & EQuadrant.BOTTOMLEFT == EQuadrant.BOTTOMLEFT): result |= EQuadrant.TOPRIGHT
-		assert(result != EQuadrant.INVALID, "get_oppositequadrant fail")
-		return result
-	func get_quadrant_Bounds2i(quadrant:int) -> Bounds2i:
-		var xmin:int = xSize;
-		var xmax:int = 0;
-		var ymin:int = ySize;
-		var ymax:int = 0;
-		if (quadrant & EQuadrant.TOPLEFT == EQuadrant.TOPLEFT):
-			xmin = min(xmin, 0)
-			xmax = max(xmax, leftXMax)
-			ymin = min(ymin, 0)
-			ymax = max(ymax, topYMax)
-			#print("quadrant TL > %s..%s %s..%s" % [xmin, xmax, ymin, ymax])
-		if (quadrant & EQuadrant.TOPRIGHT == EQuadrant.TOPRIGHT):
-			xmin = min(xmin, rightXMin)
-			xmax = max(xmax, xSize-1)
-			ymin = min(ymin, 0)
-			ymax = max(ymax, topYMax)
-			#print("quadrant TR > %s..%s %s..%s" % [xmin, xmax, ymin, ymax])
-		if (quadrant & EQuadrant.BOTTOMLEFT == EQuadrant.BOTTOMLEFT):
-			xmin = min(xmin, 0)
-			xmax = max(xmax, leftXMax)
-			ymin = min(ymin, bottomYMin)
-			ymax = max(ymax, ySize-1)
-			#print("quadrant BL > %s..%s %s..%s" % [xmin, xmax, ymin, ymax])
-		if (quadrant & EQuadrant.BOTTOMRIGHT == EQuadrant.BOTTOMRIGHT):
-			xmin = min(xmin, rightXMin)
-			xmax = max(xmax, xSize-1)
-			ymin = min(ymin, bottomYMin)
-			ymax = max(ymax, ySize-1)
-			#print("quadrant BR > %s..%s %s..%s" % [xmin, xmax, ymin, ymax])
-		lastProcessedBounds.xmin = xmin;
-		lastProcessedBounds.xmax = xmax;
-		lastProcessedBounds.ymin = ymin;
-		lastProcessedBounds.ymax = ymax;
-		return lastProcessedBounds;
-
-#endregion
-
 var currentHoveredCell:Cell
 var allCellDatas:Array[CellData] = []
 var quadrantData:QuadrantData
@@ -151,8 +20,10 @@ var resetGuessAutoMode:bool = false
 
 var quadrantHighlight:NinePatchRect
 
+var hintFill:HintFill
+
 var codeLabel:CodeLabel
-var unlockedState:bool = false
+var boardResolved:bool = false
 #var lockLabel:bool = false
 
 # Called when the node enters the scene tree for the first time.
@@ -167,6 +38,8 @@ func _ready() -> void:
 	
 	var _result:int = m_menuButton.pressed.connect(_on_menuButton_pressed)
 	_result = m_unlockButton.pressed.connect(_on_openlockButton_pressed)
+	
+	hintFill = HintFill.new(self)
 	
 	#var arraytest:Array[int] = [1,2,22,12,9,7,6,4]
 	#if 12 in arraytest: print("12 is in!")
@@ -187,27 +60,24 @@ func _on_menuButton_pressed() -> void:
 
 
 func _on_openlockButton_pressed() -> void:
-	if ( !unlockedState ):
+	if ( !boardResolved ):
 		resolve_board()
 
 func resolve_board() -> void:
-	unlockedState = true
+	boardResolved = true
 	currentHoveredCell = null
 	update_quadrant_highlight()
 	update_label(null)
 	for cellData:CellData in allCellDatas:
 		cellData.cellRef.lock_button()
-		if cellData.cellState == ECellState.UNSET:
+		if cellData.cellState == CellData.ECellState.UNSET:
 			cellData.cellRef.display_error(cellData.value)
-		elif cellData.cellState == ECellState.GUESS:
+		elif cellData.cellState == CellData.ECellState.GUESS:
 			if (cellData.guess != cellData.value):
 				cellData.cellRef.display_error(cellData.value)
 			else:
 				cellData.cellRef.display_success(cellData.value)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-	#pass
 
 func clear_old_game() -> void:
 	if (allCellDatas.size() > 0):
@@ -219,7 +89,8 @@ func clear_old_game() -> void:
 	resetGuessAutoMode = false;
 	Helpers.disable_and_hide_node(quadrantHighlight)
 	Helpers.disable_and_hide_node(codeLabel)
-	unlockedState = false
+	boardResolved = false
+	hintFill.clear()
 
 func start_new_game(xsize:int = 4, ysize:int = 4) -> void:
 	print("Starting new game")
@@ -291,14 +162,14 @@ func update_guess_if_possible(value:int) -> void:
 	if (currentHoveredCell != null):
 		var cellData:CellData = get_cellData_from_cell(currentHoveredCell)
 		assert(currentHoveredCell == cellData.cellRef, "mismatch: allCellDatas[get_cell_id(cell)] != cell !!")
-		var canSetGuess:bool = cellData.cellState != ECellState.SET
+		var canSetGuess:bool = cellData.cellState != CellData.ECellState.SET
 		if (canSetGuess):
 			cellData.set_guess(value)
 	
 func reset_guess_if_possible() -> void:
 	if (currentHoveredCell != null):
 		var cellData:CellData = get_cellData_from_cell(currentHoveredCell)
-		var canResetGuess:bool = cellData.cellState != ECellState.SET
+		var canResetGuess:bool = cellData.cellState != CellData.ECellState.SET
 		if (canResetGuess):
 			cellData.reset_guess()
 
@@ -318,17 +189,22 @@ func get_cellData_from_cell(cell:Cell) -> CellData:
 	
 func on_cell_hacked(hackedCell:Cell) -> void:
 	var cellData:CellData = get_cellData_from_cell(hackedCell)
-	var isAlreadyHacked:bool = cellData.cellState == ECellState.SET # (cellData.codeStr != null && cellData.codeStr != "")
+	var isAlreadyHacked:bool = cellData.cellState == CellData.ECellState.SET # (cellData.codeStr != null && cellData.codeStr != "")
 	if (isAlreadyHacked):
 		#print("cell %d already hacked" % cellData.cellId)
 		return
 	generate_code_for_cell(cellData)
-	cellData.cellState = ECellState.SET
+	cellData.cellState = CellData.ECellState.SET
 	cellData.set_hacked()
 	update_quadrant_highlight()
 
-func on_cell_clicked(_clickedCell:Cell) -> void:
-	pass
+func on_cell_clicked(clickedCell:Cell) -> void:
+	var cellData:CellData = get_cellData_from_cell(clickedCell)
+	if (cellData.cellState == CellData.ECellState.SET):
+		clear_all_hints()
+		hintFill.start_hint(cellData)
+		
+		
 	#if (currentHoveredCell != null):
 		#var cellData:CellData = get_cellData_from_cell(currentHoveredCell)
 		#var canLockLabel:bool = cellData.cellState == ECellState.SET
@@ -397,7 +273,7 @@ func update_quadrant_highlight() -> void:
 		Helpers.disable_and_hide_node(quadrantHighlight)
 		return
 	var cellData:CellData = get_cellData_from_cell(currentHoveredCell)
-	if (cellData.cellState != ECellState.SET):
+	if (cellData.cellState != CellData.ECellState.SET):
 		Helpers.disable_and_hide_node(quadrantHighlight)
 		return
 	Helpers.enable_and_show_node(quadrantHighlight)
@@ -419,5 +295,22 @@ func update_label(cellData:CellData) -> void:
 	codeLabel.line.add_point(Vector2(0, 0))
 	codeLabel.line.add_point(cellData.cellRef.global_position - codeLabel.global_position + Vector2(8,64-8))
 	#codeLabel.set_anchors_preset(Control.PRESET_TOP_LEFT, true)
+
+func clear_all_hints() -> void:
+	for cellData:CellData in allCellDatas:
+		cellData.cellRef.hide_hint_label()
+
+func update_hints_for_cells(cellsPos:Array[Vector2i], hintvalue:int) -> void:
+	for pos:Vector2i in cellsPos:
+		if (is_valid_pos(pos)):
+			var cellid:int = pos.y*boardXSize+pos.x
+			var cellData:CellData = allCellDatas[cellid]
+			if ( cellData.cellState == CellData.ECellState.UNSET):
+				allCellDatas[cellid].cellRef.display_hint_label(hintvalue)
+
+func is_valid_pos(pos:Vector2i) -> bool:
+	return (pos.x >= 0 && pos.x < boardXSize && pos.y >= 0 && pos.y < boardYSize)
 	
-	
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(_delta:float) -> void:
+	hintFill.update_hint()

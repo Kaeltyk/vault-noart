@@ -4,6 +4,7 @@ extends NinePatchRect
 @export var m_unsetLabel:Label
 @export var m_setLabel:Label
 @export var m_guessLabel:Label
+@export var m_hintLabel:Label
 @export var m_button:Button
 
 var game:VaultGame
@@ -13,10 +14,12 @@ func _ready() -> void:
 	assert(m_unsetLabel != null, "Cell missing its unset label")
 	assert(m_setLabel != null, "Cell missing its set label")
 	assert(m_guessLabel != null, "Cell missing its guess label")
+	assert(m_hintLabel != null, "Cell missing its hint label")
 	assert(m_button != null, "Cell missing its button")
 	Helpers.enable_and_show_node(m_unsetLabel)
 	Helpers.disable_and_hide_node(m_setLabel)
 	Helpers.disable_and_hide_node(m_guessLabel)
+	Helpers.disable_and_hide_node(m_hintLabel)
 	#self.connect("mouse_entered", self, "_on_mouse_entered") /!\ Godot3
 	var _result:int = m_button.mouse_entered.connect(_on_mouse_entered)
 	_result = m_button.mouse_exited.connect(_on_mouse_exited)
@@ -60,6 +63,7 @@ func set_guess(value:int) -> void:
 	Helpers.enable_and_show_node(m_guessLabel)
 	Helpers.disable_and_hide_node(m_unsetLabel)
 	Helpers.disable_and_hide_node(m_setLabel)
+	hide_hint_label();
 
 func reset_guess() -> void:
 	Helpers.enable_and_show_node(m_unsetLabel)
@@ -71,6 +75,7 @@ func set_hacked(value:int) -> void:
 	Helpers.disable_and_hide_node(m_guessLabel)
 	Helpers.disable_and_hide_node(m_unsetLabel)
 	Helpers.enable_and_show_node(m_setLabel)
+	hide_hint_label();
 	
 func display_error(value:int) -> void:
 	#var dbgtypelist:PackedStringArray = m_setLabel.theme.get_color_type_list()
@@ -89,3 +94,12 @@ func display_success(value:int) -> void:
 	Helpers.disable_and_hide_node(m_guessLabel)
 	Helpers.disable_and_hide_node(m_unsetLabel)
 	Helpers.enable_and_show_node(m_setLabel)
+
+func display_hint_label(value:int) -> void:
+	m_hintLabel.text = "%s" % value
+	Helpers.enable_and_show_node(m_hintLabel)
+	
+func hide_hint_label() -> void:
+	Helpers.disable_and_hide_node(m_hintLabel)
+
+

@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://cpicny474ru2s" path="res://Cell.tscn" id="4_f2ehu"]
 [ext_resource type="Script" path="res://Scripts/Menu.gd" id="5_6q7iv"]
 [ext_resource type="Texture2D" uid="uid://dfhhnxtq1ojty" path="res://Textures/White16.png" id="6_rm1kv"]
-[ext_resource type="Script" path="res://Game.gd" id="8_aegs5"]
+[ext_resource type="Script" path="res://Scripts/Game.gd" id="8_aegs5"]
 [ext_resource type="Theme" uid="uid://dj5rm07ftvajr" path="res://Theme_Cell.tres" id="8_pna5h"]
 [ext_resource type="PackedScene" uid="uid://x6xpexqui1sb" path="res://QuadrantHighlight.tscn" id="10_rpukv"]
 [ext_resource type="PackedScene" uid="uid://bvid0pbuc7dof" path="res://CodeLabel.tscn" id="11_ud5yb"]
@@ -355,6 +355,7 @@ autowrap_mode = 2
 
 [node name="CanvasLayer_Credits" type="CanvasLayer" parent="."]
 layer = 4
+visible = false
 
 [node name="Control" type="Control" parent="CanvasLayer_Credits"]
 layout_mode = 3
