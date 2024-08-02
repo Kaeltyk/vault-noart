@@ -144,7 +144,6 @@ offset_bottom = 287.0
 
 [node name="CanvasLayer_Menu" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_rulesButton", "m_new3x3Button", "m_new4x4Button", "m_new5x5Button", "m_initializer", "m_vaultGame")]
 layer = 2
-visible = false
 script = ExtResource("5_6q7iv")
 m_rulesButton = NodePath("Control/Button_Rules")
 m_new3x3Button = NodePath("Control/HBoxContainer/Button_3x3")
@@ -158,7 +157,7 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 86.0
+offset_top = 95.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -344,9 +343,9 @@ mouse_filter = 2
 [node name="Button_Menu" type="Button" parent="CanvasLayer_Game/HighlightControl"]
 layout_mode = 1
 offset_left = 334.0
-offset_top = 32.0
+offset_top = 27.0
 offset_right = 443.0
-offset_bottom = 73.0
+offset_bottom = 68.0
 focus_mode = 0
 theme = ExtResource("8_pna5h")
 text = "Menu"
@@ -354,9 +353,9 @@ text = "Menu"
 [node name="Button_Unlock" type="Button" parent="CanvasLayer_Game/HighlightControl"]
 layout_mode = 1
 offset_left = 334.0
-offset_top = 100.0
+offset_top = 123.0
 offset_right = 458.0
-offset_bottom = 141.0
+offset_bottom = 164.0
 focus_mode = 0
 theme = ExtResource("8_pna5h")
 text = "Unlock"

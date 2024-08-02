@@ -22,6 +22,10 @@ func _ready() -> void:
 	_result = m_button.mouse_exited.connect(_on_mouse_exited)
 	_result = m_button.gui_input.connect(_on_gui_input)
 
+func lock_button() -> void:
+	#print("locking button for Cell %s"%name)
+	Helpers.disable_and_hide_node(m_button)
+	
 #func _gui_input(event):
 	#if event is InputEventMouseButton:
 		#if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
@@ -68,3 +72,20 @@ func set_hacked(value:int) -> void:
 	Helpers.disable_and_hide_node(m_unsetLabel)
 	Helpers.enable_and_show_node(m_setLabel)
 	
+func display_error(value:int) -> void:
+	#var dbgtypelist:PackedStringArray = m_setLabel.theme.get_color_type_list()
+	#for str:String in dbgtypelist: print("typelist %s" % str)
+	#var dbgcolorlist:PackedStringArray = m_setLabel.theme.get_color_list("Label")
+	#for str:String in dbgcolorlist: print("colorlist %s" % str)
+	m_setLabel.text =  "%s" % value
+	m_setLabel.add_theme_color_override("font_color", Color(1.0, 0.3, 0.2))
+	Helpers.disable_and_hide_node(m_guessLabel)
+	Helpers.disable_and_hide_node(m_unsetLabel)
+	Helpers.enable_and_show_node(m_setLabel)
+
+func display_success(value:int) -> void:
+	m_setLabel.text =  "%s" % value
+	m_setLabel.add_theme_color_override("font_color", Color(0.3, 1.0, 0.2))
+	Helpers.disable_and_hide_node(m_guessLabel)
+	Helpers.disable_and_hide_node(m_unsetLabel)
+	Helpers.enable_and_show_node(m_setLabel)

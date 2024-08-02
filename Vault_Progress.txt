@@ -6,7 +6,11 @@ TODO:
 	• shift help key to display path & possibilities on hacked cell?
 		same key on other cells to display possibilities from existing codes?
 	• display all codes by spreading labels around?
+	• change 'Set' state when the code is setup in the grid?
 
+2024-08-02
+	• Unlock button / end game process
+	• Add default Node script template with warning fixes
 2024-08-01
 	• Clean menu setup, add in-game memnu toggle, updated rules
 	• Add code label for hacked cells on hover

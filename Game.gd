@@ -152,6 +152,7 @@ var resetGuessAutoMode:bool = false
 var quadrantHighlight:NinePatchRect
 
 var codeLabel:CodeLabel
+var unlockedState:bool = false
 #var lockLabel:bool = false
 
 # Called when the node enters the scene tree for the first time.
@@ -165,7 +166,12 @@ func _ready() -> void:
 	Helpers.disable_and_hide_node(codeLabel)
 	
 	var _result:int = m_menuButton.pressed.connect(_on_menuButton_pressed)
-	_result = m_unlockButton.pressed.connect(_on_unlockButton_pressed)
+	_result = m_unlockButton.pressed.connect(_on_openlockButton_pressed)
+	
+	#var arraytest:Array[int] = [1,2,22,12,9,7,6,4]
+	#if 12 in arraytest: print("12 is in!")
+	#var pos:int = arraytest.find(9)
+	#print("found 9 at pos %s" %pos)
 	
 	#quadrantData = QuadrantData.new(5, 5)
 	#var _quadrantTest:int = quadrantData.get_quadrant(0,0)
@@ -175,8 +181,24 @@ func _ready() -> void:
 func _on_menuButton_pressed() -> void:
 	Helpers.toggle_show_hide_node(m_initializer.m_menuCanvas)
 
-func _on_unlockButton_pressed() -> void:
-	pass
+func _on_openlockButton_pressed() -> void:
+	if ( !unlockedState ):
+		resolve_board()
+
+func resolve_board() -> void:
+	unlockedState = true
+	currentHoveredCell = null
+	update_quadrant_highlight()
+	update_label(null)
+	for cellData:CellData in allCellDatas:
+		cellData.cellRef.lock_button()
+		if cellData.cellState == ECellState.UNSET:
+			cellData.cellRef.display_error(cellData.value)
+		elif cellData.cellState == ECellState.GUESS:
+			if (cellData.guess != cellData.value):
+				cellData.cellRef.display_error(cellData.value)
+			else:
+				cellData.cellRef.display_success(cellData.value)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
@@ -192,7 +214,7 @@ func clear_old_game() -> void:
 	resetGuessAutoMode = false;
 	Helpers.disable_and_hide_node(quadrantHighlight)
 	Helpers.disable_and_hide_node(codeLabel)
-
+	unlockedState = false
 
 func start_new_game(xsize:int = 4, ysize:int = 4) -> void:
 	print("Starting new game")
@@ -351,7 +373,7 @@ func generate_code_for_cell(cellData:CellData) -> void:
 		var pathcellId:int = pathvect.y*boardXSize + pathvect.x
 		cellData.codeStr += "%s" % allCellDatas[pathcellId].value
 		cellData.codeSequence.append(pathcellId)
-	print("code: %s" % cellData.codeStr)
+	#print("code: %s" % cellData.codeStr)
 	
 
 func get_quadrant_for_cell(cellData:CellData) -> int:
