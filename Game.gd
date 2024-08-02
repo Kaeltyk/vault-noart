@@ -179,7 +179,12 @@ func _ready() -> void:
 	#print("Game Ready!!")
 
 func _on_menuButton_pressed() -> void:
-	Helpers.toggle_show_hide_node(m_initializer.m_menuCanvas)
+	#Helpers.toggle_show_hide_node(m_initializer.m_menuCanvas)
+	if (m_initializer.m_menuCanvas.process_mode == Node.PROCESS_MODE_DISABLED):
+		Helpers.enable_and_show_node(m_initializer.m_menuCanvas)
+	else:
+		m_initializer.m_menuCanvas.close_menu()
+
 
 func _on_openlockButton_pressed() -> void:
 	if ( !unlockedState ):

@@ -1,14 +1,20 @@
 Resources:
 	Font: https://fonts.google.com/specimen/Comfortaa/about?preview.text=VAULT%0A123456789%0A%E2%80%A2%20&preview.size=69&preview.layout=grid&classification=Display&stroke=Sans+Serif
 		Confortaa by Johan Aakerlund - Free licence font
+	CC0 License info: https://creativecommons.org/publicdomain/zero/1.0/
+	
 
 TODO:
 	• shift help key to display path & possibilities on hacked cell?
 		same key on other cells to display possibilities from existing codes?
 	• display all codes by spreading labels around?
-	• change 'Set' state when the code is setup in the grid?
+	• change 'Set' state feedback when the code have a path in the grid?
+NEXT-GEN TODO:
+	• make a mode where hacked cells are already there & enough to decypher the code
 
 2024-08-02
+	• Credits page, exclusive with Rules + menu close fix
+	• more game sizes (3x3 > 8x8)
 	• Unlock button / end game process
 	• Add default Node script template with warning fixes
 2024-08-01

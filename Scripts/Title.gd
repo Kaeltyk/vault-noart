@@ -11,7 +11,6 @@ func _input(event:InputEvent) -> void:
 		Helpers.enable_and_show_node(m_initializer.m_backgroundCanvas)
 		Helpers.enable_and_show_node(m_initializer.m_menuCanvas)
 		Helpers.disable_and_hide_node(m_initializer.m_titleCanvas)
-		
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
