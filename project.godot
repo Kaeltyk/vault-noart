@@ -34,6 +34,8 @@ gdscript/warnings/return_value_discarded=1
 window/size/viewport_width=1920
 window/size/viewport_height=1080
 window/stretch/mode="canvas_items"
+mouse_cursor/custom_image="res://Textures/MouseCursor_ArrowHead.png"
+mouse_cursor/custom_image_hotspot=Vector2(7, 7)
 
 [dotnet]
 

@@ -15,7 +15,6 @@ Hint Fill Algo?
 						  d
 
 TODO:
-	• custom mouse cursor
 	• shift help key to display path & possibilities on hacked cell?
 		same key on other cells to display possibilities from existing codes?
 	• display all codes by spreading labels around?
@@ -24,6 +23,7 @@ NEXT-GEN TODO:
 	• make a mode where hacked cells are already there & enough to decypher the code
 
 2024-08-03
+	• Added custom mouse cursor
 	• Hint algo finished & redone - was too complex to filter existing cells
 2024-08-02
 	• start on clicking a hacked cell & display hints for possible paths/values flooding the grid
