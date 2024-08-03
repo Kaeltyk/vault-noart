@@ -39,6 +39,10 @@ window/stretch/mode="canvas_items"
 
 project/assembly_name="KaeltykVault"
 
+[editor]
+
+movie_writer/movie_file="D:/GodotMovies/GodotMovie.avi"
+
 [input]
 
 ui_zero={

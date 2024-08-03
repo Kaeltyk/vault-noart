@@ -273,7 +273,6 @@ text = "Credits"
 
 [node name="CanvasLayer_Rules" type="CanvasLayer" parent="."]
 layer = 3
-visible = false
 
 [node name="Control" type="Control" parent="CanvasLayer_Rules"]
 layout_mode = 3
@@ -331,8 +330,7 @@ offset_top = 82.0
 offset_right = 810.0
 offset_bottom = 836.0
 grow_horizontal = 2
-theme_override_fonts/font = ExtResource("1_ivdue")
-theme_override_font_sizes/font_size = 32
+theme = ExtResource("8_pna5h")
 text = "Find the Vault code hacking a minimum number of cells.
 Hacking a cell will give a sequence of digits following one of the most direct paths to reach a random cell in the opposite quadrant.
 
@@ -341,6 +339,7 @@ Digits 0-9 (key or numpad) over an unhacked cell: make a guess
 Backspace / numpad -: clear a guess (keep pressed to swipe)
 
 Hover a hacked cell to display the code and the possible quadrant targetted
+Left Click a hacked cell to display possible unset cells values (taking into account hacked & guessed cells paths)
 Click Unlock to test your solution"
 editable = false
 context_menu_enabled = false

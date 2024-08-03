@@ -18,3 +18,14 @@ func get_rand_vec2i_in_bounds_except(except:Vector2i) -> Vector2i:
 		x = randi_range(xmin, xmax)
 		y = randi_range(ymin, ymax)
 	return Vector2i(x, y)
+
+func distance_to_pos(pos:Vector2i) -> int:
+	var dist:int = 0
+	if ( pos.x < xmin ): dist += xmin - pos.x
+	if ( pos.x > xmax ): dist += pos.x - xmax
+	if ( pos.y < ymin ): dist += ymin - pos.y
+	if ( pos.y > ymax ): dist += pos.y - ymax
+	return dist
+	
+	
+	

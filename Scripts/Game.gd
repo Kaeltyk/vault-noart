@@ -66,6 +66,7 @@ func _on_openlockButton_pressed() -> void:
 func resolve_board() -> void:
 	boardResolved = true
 	currentHoveredCell = null
+	clear_all_hints()
 	update_quadrant_highlight()
 	update_label(null)
 	for cellData:CellData in allCellDatas:

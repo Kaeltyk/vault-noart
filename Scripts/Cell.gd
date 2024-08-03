@@ -82,11 +82,16 @@ func display_error(value:int) -> void:
 	#for str:String in dbgtypelist: print("typelist %s" % str)
 	#var dbgcolorlist:PackedStringArray = m_setLabel.theme.get_color_list("Label")
 	#for str:String in dbgcolorlist: print("colorlist %s" % str)
-	m_setLabel.text =  "%s" % value
-	m_setLabel.add_theme_color_override("font_color", Color(1.0, 0.3, 0.2))
-	Helpers.disable_and_hide_node(m_guessLabel)
-	Helpers.disable_and_hide_node(m_unsetLabel)
-	Helpers.enable_and_show_node(m_setLabel)
+	
+	#m_setLabel.text =  "%s" % value
+	#m_setLabel.add_theme_color_override("font_color", Color(1.0, 0.3, 0.2))
+	#Helpers.disable_and_hide_node(m_guessLabel)
+	#Helpers.disable_and_hide_node(m_unsetLabel)
+	#Helpers.enable_and_show_node(m_setLabel)
+
+	m_hintLabel.text = "%s" % value
+	m_hintLabel.add_theme_color_override("font_color", Color(1.0, 0.3, 0.2))
+	Helpers.enable_and_show_node(m_hintLabel)
 
 func display_success(value:int) -> void:
 	m_setLabel.text =  "%s" % value
