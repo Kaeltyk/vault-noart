@@ -303,11 +303,10 @@ func clear_all_hints() -> void:
 
 func update_hints_for_cells(cellsPos:Array[Vector2i], hintvalue:int) -> void:
 	for pos:Vector2i in cellsPos:
-		if (is_valid_pos(pos)):
-			var cellid:int = pos.y*boardXSize+pos.x
-			var cellData:CellData = allCellDatas[cellid]
-			if ( cellData.cellState == CellData.ECellState.UNSET):
-				allCellDatas[cellid].cellRef.display_hint_label(hintvalue)
+		var cellid:int = pos.y*boardXSize+pos.x
+		var cellData:CellData = allCellDatas[cellid]
+		if ( cellData.cellState == CellData.ECellState.UNSET):
+			allCellDatas[cellid].cellRef.display_hint_label(hintvalue)
 
 func is_valid_pos(pos:Vector2i) -> bool:
 	return (pos.x >= 0 && pos.x < boardXSize && pos.y >= 0 && pos.y < boardYSize)

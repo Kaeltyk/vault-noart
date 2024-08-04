@@ -273,6 +273,7 @@ text = "Credits"
 
 [node name="CanvasLayer_Rules" type="CanvasLayer" parent="."]
 layer = 3
+visible = false
 
 [node name="Control" type="Control" parent="CanvasLayer_Rules"]
 layout_mode = 3

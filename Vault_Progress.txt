@@ -22,6 +22,10 @@ TODO:
 NEXT-GEN TODO:
 	• make a mode where hacked cells are already there & enough to decypher the code
 
+2024-08-05
+	TODO: impossible cells with no possible flow are ok, now they need to propagate back to their origin to also filter origins when they are not possible
+2024-08-04
+	• Hint algo re-redone with flow info to be able to remove impossible cells in addition to filter guess cells
 2024-08-03
 	• Added custom mouse cursor
 	• Hint algo finished & redone - was too complex to filter existing cells
