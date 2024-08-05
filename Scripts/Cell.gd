@@ -6,6 +6,10 @@ extends NinePatchRect
 @export var m_guessLabel:Label
 @export var m_hintLabel:Label
 @export var m_button:Button
+@export var m_flowUp:Label
+@export var m_flowLeft:Label
+@export var m_flowRight:Label
+@export var m_flowDown:Label
 
 var game:VaultGame
 
@@ -19,7 +23,8 @@ func _ready() -> void:
 	Helpers.enable_and_show_node(m_unsetLabel)
 	Helpers.disable_and_hide_node(m_setLabel)
 	Helpers.disable_and_hide_node(m_guessLabel)
-	Helpers.disable_and_hide_node(m_hintLabel)
+	hide_hint_label()
+	hide_flow()
 	#self.connect("mouse_entered", self, "_on_mouse_entered") /!\ Godot3
 	var _result:int = m_button.mouse_entered.connect(_on_mouse_entered)
 	_result = m_button.mouse_exited.connect(_on_mouse_exited)
@@ -107,4 +112,32 @@ func display_hint_label(value:int) -> void:
 func hide_hint_label() -> void:
 	Helpers.disable_and_hide_node(m_hintLabel)
 
+func hide_flow() -> void:
+	Helpers.disable_and_hide_node(m_flowUp)
+	Helpers.disable_and_hide_node(m_flowLeft)
+	Helpers.disable_and_hide_node(m_flowRight)
+	Helpers.disable_and_hide_node(m_flowDown)
+
+func display_flow(flowdir:HintFill.EFlowDir) -> void:
+	match(flowdir):
+		HintFill.EFlowDir.L:
+			Helpers.disable_and_hide_node(m_flowUp)
+			Helpers.enable_and_show_node(m_flowLeft)
+			Helpers.disable_and_hide_node(m_flowRight)
+			Helpers.disable_and_hide_node(m_flowDown)
+		HintFill.EFlowDir.U:
+			Helpers.enable_and_show_node(m_flowUp)
+			Helpers.disable_and_hide_node(m_flowLeft)
+			Helpers.disable_and_hide_node(m_flowRight)
+			Helpers.disable_and_hide_node(m_flowDown)
+		HintFill.EFlowDir.R:
+			Helpers.disable_and_hide_node(m_flowUp)
+			Helpers.disable_and_hide_node(m_flowLeft)
+			Helpers.enable_and_show_node(m_flowRight)
+			Helpers.disable_and_hide_node(m_flowDown)
+		HintFill.EFlowDir.D:
+			Helpers.disable_and_hide_node(m_flowUp)
+			Helpers.disable_and_hide_node(m_flowLeft)
+			Helpers.disable_and_hide_node(m_flowRight)
+			Helpers.enable_and_show_node(m_flowDown)
 

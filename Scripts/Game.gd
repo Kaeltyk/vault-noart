@@ -300,6 +300,7 @@ func update_label(cellData:CellData) -> void:
 func clear_all_hints() -> void:
 	for cellData:CellData in allCellDatas:
 		cellData.cellRef.hide_hint_label()
+		cellData.cellRef.hide_flow()
 
 func update_hints_for_cells(cellsPos:Array[Vector2i], hintvalue:int) -> void:
 	for pos:Vector2i in cellsPos:
