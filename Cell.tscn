@@ -109,6 +109,7 @@ theme_override_colors/font_color = Color(0.485703, 0.485704, 0.485703, 1)
 text = "^"
 
 [node name="FlowLeft" type="Label" parent="."]
+layout_mode = 0
 offset_left = -10.0
 offset_top = 43.0
 offset_right = 12.0
@@ -119,6 +120,7 @@ theme_override_colors/font_color = Color(0.485703, 0.485704, 0.485703, 1)
 text = "^"
 
 [node name="FlowRight" type="Label" parent="."]
+layout_mode = 0
 offset_left = 74.0
 offset_top = 21.0
 offset_right = 96.0
@@ -129,6 +131,7 @@ theme_override_colors/font_color = Color(0.485703, 0.485704, 0.485703, 1)
 text = "^"
 
 [node name="FlowDown" type="Label" parent="."]
+layout_mode = 0
 offset_left = 43.0
 offset_top = 74.0
 offset_right = 65.0

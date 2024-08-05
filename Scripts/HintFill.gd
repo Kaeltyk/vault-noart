@@ -173,8 +173,6 @@ func flow(originFlowCell:FlowCell, flowDir:EFlowDir) -> void:
 		targetFlowCell.fromDir |= flowDir
 		#assert(targetFlowCell.outFlowDir & targetFlowDir != targetFlowDir, "expect flow to existing cell to be the same if origin was setup properly")
 		#targetFlowCell.outFlowDir |= targetFlowDir
-			
-				
 
 func update_hint() -> void:
 	if ( hintUpdateFinished ): return
@@ -186,7 +184,6 @@ func update_hint() -> void:
 		for flowCell:FlowCell in allFlowCells:
 			if(flowCell.needFlow):
 				update_flow(flowCell)
-	#vaultGame.update_hints_for_cells(allFlowCells, pushHintCurrentValue)
 		allFlowCells.append_array(newFlowCells)
 	
 	var anyDirtyCell:bool = false
