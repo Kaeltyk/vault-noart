@@ -20,7 +20,7 @@ class FlowCell:
 	var outFlowDir:int
 	var possibleFlowDir:int
 	var needFlow:bool = false 	# update flow, should be done once
-	var dirty: bool = false		# plan for next update, for reverse flow
+	var isDirty: bool = false		# plan for next update, for reverse flow
 	var hintValue:int
 	func _init(_pos:Vector2i, _fromDir:int, _hintValue:int) -> void:
 		pos = _pos
@@ -43,6 +43,7 @@ var newFlowCells:Array[FlowCell] = []
 
 var pushHintCurrentValue:int
 var stepsLeft:int
+var hintUpdateFinished:bool = true
 
 func _init(game:VaultGame) -> void:
 	vaultGame = game
@@ -63,9 +64,13 @@ func start_hint(startCellData:CellData) -> void:
 	process_codestr_to_hintValues(hintCellData.codeStr)
 	pushHintCurrentValue = hintValues.pop_front()
 	setup_startFlowCell();
+	hintUpdateFinished = false
 
 func get_flow_cell_at_pos(pos:Vector2i) -> FlowCell:
 	for flowCell:FlowCell in allFlowCells:
+		if (flowCell.pos == pos):
+			return flowCell
+	for flowCell:FlowCell in newFlowCells:
 		if (flowCell.pos == pos):
 			return flowCell
 	return null
@@ -114,7 +119,7 @@ func inv_flow_dir(flowDir:EFlowDir) -> EFlowDir:
 		
 func update_flow(flowCell:FlowCell) -> void:
 	# add/update all cells in outflowdir
-	print("update flow for %s - outdir=%s" % [flowCell.pos, flowCell.outFlowDir])
+	#print("update flow for %s - outdir=%s" % [flowCell.pos, flowCell.outFlowDir])
 	var isFlowingL:bool = (flowCell.outFlowDir & EFlowDir.L == EFlowDir.L)
 	var isFlowingU:bool = (flowCell.outFlowDir & EFlowDir.U == EFlowDir.U)
 	var isFlowingR:bool = (flowCell.outFlowDir & EFlowDir.R == EFlowDir.R)
@@ -145,8 +150,8 @@ func flow(originFlowCell:FlowCell, flowDir:EFlowDir) -> void:
 	#if ( originFlowCell.fromDir & backdir == backdir): return # don't go back to any cell we can come from
 	if ( !can_flow(originFlowCell, flowDir) ):
 		originFlowCell.possibleFlowDir &= ~flowDir
-		originFlowCell.dirty = true
-		print("  can't flow in dir %s - possible %s" % [EFlowDir.find_key(flowDir), originFlowCell.possibleFlowDir])
+		originFlowCell.isDirty = true
+		#print("  can't flow in dir %s - possible %s" % [EFlowDir.find_key(flowDir), originFlowCell.possibleFlowDir])
 		return
 	var targetFlowDir:int = originFlowCell.outFlowDir
 	var cancelDir:EFlowDir = inv_flow_dir(flowDir)
@@ -159,12 +164,12 @@ func flow(originFlowCell:FlowCell, flowDir:EFlowDir) -> void:
 		EFlowDir.D: targetPos += vD
 	var targetFlowCell:FlowCell = get_flow_cell_at_pos(targetPos)
 	if ( targetFlowCell == null ):
-		print("  flowing %s to %s NEW dir=%s" % [originFlowCell.pos, targetPos, targetFlowDir])
+		#print("  flowing %s to %s NEW dir=%s" % [originFlowCell.pos, targetPos, targetFlowDir])
 		targetFlowCell = FlowCell.new(targetPos, flowDir, pushHintCurrentValue)
 		targetFlowCell.set_out_flow_dir(targetFlowDir)
 		newFlowCells.append(targetFlowCell)
 	else:
-		print("  flowing %s to %s EXISTS dir=%s" % [originFlowCell.pos, targetPos, targetFlowDir])
+		#print("  flowing %s to %s EXISTS dir=%s" % [originFlowCell.pos, targetPos, targetFlowDir])
 		targetFlowCell.fromDir |= flowDir
 		#assert(targetFlowCell.outFlowDir & targetFlowDir != targetFlowDir, "expect flow to existing cell to be the same if origin was setup properly")
 		#targetFlowCell.outFlowDir |= targetFlowDir
@@ -172,23 +177,67 @@ func flow(originFlowCell:FlowCell, flowDir:EFlowDir) -> void:
 				
 
 func update_hint() -> void:
-	if ( hintValues.size() == 0 ): return
-	pushHintCurrentValue = hintValues.pop_front()
-	stepsLeft = hintValues.size()
-	newFlowCells.clear()
-	for flowCell:FlowCell in allFlowCells:
-		if(flowCell.needFlow):
-			update_flow(flowCell)
-	#vaultGame.update_hints_for_cells(allFlowCells, pushHintCurrentValue)
-	allFlowCells.append_array(newFlowCells)
+	if ( hintUpdateFinished ): return
 	
+	if ( hintValues.size() > 0):
+		pushHintCurrentValue = hintValues.pop_front()
+		stepsLeft = hintValues.size()
+		newFlowCells.clear()
+		for flowCell:FlowCell in allFlowCells:
+			if(flowCell.needFlow):
+				update_flow(flowCell)
+	#vaultGame.update_hints_for_cells(allFlowCells, pushHintCurrentValue)
+		allFlowCells.append_array(newFlowCells)
+	
+	var anyDirtyCell:bool = false
 	for flowCell:FlowCell in allFlowCells:
 		var cellid:int = flowCell.pos.y * vaultGame.boardXSize + flowCell.pos.x
 		var cellData:CellData = vaultGame.allCellDatas[cellid]
 		if ( flowCell.possibleFlowDir == 0 ):
-			vaultGame.allCellDatas[cellid].cellRef.hide_hint_label()
+			if (flowCell.isDirty):
+				anyDirtyCell = true
+				#if (flowCell.pos == Vector2i(4,1)):
+					#print("4.1 dirty, possible flow %s" % flowCell.possibleFlowDir)
+				cellData.cellRef.hide_hint_label()
+				var isFromL:bool = (flowCell.fromDir & EFlowDir.L == EFlowDir.L)
+				var isFromU:bool = (flowCell.fromDir & EFlowDir.U == EFlowDir.U)
+				var isFromR:bool = (flowCell.fromDir & EFlowDir.R == EFlowDir.R)
+				var isFromD:bool = (flowCell.fromDir & EFlowDir.D == EFlowDir.D)
+				if (isFromL):
+					var fromFlowCell:FlowCell = get_flow_cell_at_pos(flowCell.pos - vL)
+					assert(fromFlowCell != null, "dirty flowcell can't find it's 'from' ?!")
+					if (fromFlowCell.possibleFlowDir & EFlowDir.L == EFlowDir.L):
+						fromFlowCell.possibleFlowDir &= ~EFlowDir.L
+						fromFlowCell.isDirty = true
+						#print("  cancel flow from %s in dir %s - possible %s" % [fromFlowCell.pos, EFlowDir.find_key(EFlowDir.L), fromFlowCell.possibleFlowDir])
+				if (isFromU):
+					var fromFlowCell:FlowCell = get_flow_cell_at_pos(flowCell.pos - vU)
+					assert(fromFlowCell != null, "dirty flowcell can't find it's 'from' ?!")
+					if (fromFlowCell.possibleFlowDir & EFlowDir.U == EFlowDir.U):
+						fromFlowCell.possibleFlowDir &= ~EFlowDir.U
+						fromFlowCell.isDirty = true
+						#print("  cancel flow from %s in dir %s - possible %s" % [fromFlowCell.pos, EFlowDir.find_key(EFlowDir.U), fromFlowCell.possibleFlowDir])
+				if (isFromR):
+					var fromFlowCell:FlowCell = get_flow_cell_at_pos(flowCell.pos - vR)
+					assert(fromFlowCell != null, "dirty flowcell can't find it's 'from' ?!")
+					if (fromFlowCell.possibleFlowDir & EFlowDir.R == EFlowDir.R):
+						fromFlowCell.possibleFlowDir &= ~EFlowDir.R
+						fromFlowCell.isDirty = true
+						#print("  cancel flow from %s in dir %s - possible %s" % [fromFlowCell.pos, EFlowDir.find_key(EFlowDir.R), fromFlowCell.possibleFlowDir])
+				if (isFromD):
+					var fromFlowCell:FlowCell = get_flow_cell_at_pos(flowCell.pos - vD)
+					assert(fromFlowCell != null, "dirty flowcell can't find it's 'from' ?!")
+					if (fromFlowCell.possibleFlowDir & EFlowDir.D == EFlowDir.D):
+						fromFlowCell.possibleFlowDir &= ~EFlowDir.D
+						fromFlowCell.isDirty = true
+						#print("  cancel flow from %s in dir %s - possible %s" % [fromFlowCell.pos, EFlowDir.find_key(EFlowDir.D), fromFlowCell.possibleFlowDir])
+			flowCell.isDirty = false
 		elif ( cellData.cellState == CellData.ECellState.UNSET):
+			#if (flowCell.pos == Vector2i(4,1)):
+				#print("4.1 NOT dirty, possible flow %s" % flowCell.possibleFlowDir)
 			vaultGame.allCellDatas[cellid].cellRef.display_hint_label(flowCell.hintValue)
+	
+	hintUpdateFinished = !anyDirtyCell && (hintValues.size() == 0)
 
 	
 	#for flowCell:FlowCell in allFlowCells:
