@@ -3,16 +3,6 @@ Resources:
 		Confortaa by Johan Aakerlund - Free licence font
 	CC0 License info: https://creativecommons.org/publicdomain/zero/1.0/
 	
-Hint Fill Algo? 
-	each cell fill type have a direction (x = RU, y = RD, z = LD, w = LU) and they process a u/r/d/l in their dominant direction & their same type in the other one
-			u
-		u	Uu
-	x	Xx	XXx
-						  u
-			 x			 wXx
-	O		wOy			lWOYr			
-			 z			 zZy
-						  d
 
 TODO:
 	• shift help key to display path & possibilities on hacked cell?
@@ -22,8 +12,14 @@ TODO:
 NEXT-GEN TODO:
 	• make a mode where hacked cells are already there & enough to decypher the code
 
+2024-08-07
+	• 'complete/invalid' hacked cells feedbacks
 2024-08-05
-	TODO: impossible cells with no possible flow are ok, now they need to propagate back to their origin to also filter origins when they are not possible
+	• create private repo on github & push
+		had to rebase to update the email - default info in gitextensions was private email !!
+			find noreply email provided by github on email prefs under the private email
+			command to update email in git repo: git rebase -i --root -x "git commit --amend --author 'Kaeltyk <86788414+Kaeltyk@users.noreply.github.com>' -CHEAD"
+	• impossible cells with no possible flow are ok, and they propagate back to their origin to also filter origins when they are not possible
 2024-08-04
 	• Hint algo re-redone with flow info to be able to remove impossible cells in addition to filter guess cells
 2024-08-03

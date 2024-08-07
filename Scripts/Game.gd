@@ -24,6 +24,7 @@ var hintFill:HintFill
 
 var codeLabel:CodeLabel
 var boardResolved:bool = false
+var isBoardDirtyForHints:bool = false
 #var lockLabel:bool = false
 
 # Called when the node enters the scene tree for the first time.
@@ -40,7 +41,7 @@ func _ready() -> void:
 	_result = m_unlockButton.pressed.connect(_on_openlockButton_pressed)
 	
 	hintFill = HintFill.new(self)
-	
+
 	#var arraytest:Array[int] = [1,2,22,12,9,7,6,4]
 	#if 12 in arraytest: print("12 is in!")
 	#var pos:int = arraytest.find(9)
@@ -166,6 +167,7 @@ func update_guess_if_possible(value:int) -> void:
 		var canSetGuess:bool = cellData.cellState != CellData.ECellState.SET
 		if (canSetGuess):
 			cellData.set_guess(value)
+			isBoardDirtyForHints = true
 	
 func reset_guess_if_possible() -> void:
 	if (currentHoveredCell != null):
@@ -173,6 +175,7 @@ func reset_guess_if_possible() -> void:
 		var canResetGuess:bool = cellData.cellState != CellData.ECellState.SET
 		if (canResetGuess):
 			cellData.reset_guess()
+			isBoardDirtyForHints = true
 
 func get_cell_id(cell:Cell) -> int:
 	for i:int in range(allCellDatas.size()):
@@ -194,6 +197,7 @@ func on_cell_hacked(hackedCell:Cell) -> void:
 	if (isAlreadyHacked):
 		#print("cell %d already hacked" % cellData.cellId)
 		return
+	isBoardDirtyForHints = true
 	generate_code_for_cell(cellData)
 	cellData.cellState = CellData.ECellState.SET
 	cellData.set_hacked()
@@ -223,7 +227,7 @@ func on_cell_clicked(clickedCell:Cell) -> void:
 func generate_code_for_cell(cellData:CellData) -> void:
 	var targetBounds:Bounds2i = quadrantData.get_quadrant_Bounds2i(cellData.oppositequadrant)
 	var path:Array[Vector2i] = []
-	var cur:Vector2i = Vector2i(cellData.cellx, cellData.celly)
+	var cur:Vector2i = cellData.pos
 	var target:Vector2i = targetBounds.get_rand_vec2i_in_bounds_except(cur) # Vector2i(cellData.cellx, cellData.celly)
 	var dx:int = 1 if cur.x < target.x else -1 if cur.x > target.x else 0
 	var dy:int = 1 if cur.y < target.y else -1 if cur.y > target.y else 0
@@ -259,7 +263,7 @@ func generate_code_for_cell(cellData:CellData) -> void:
 	
 
 func get_quadrant_for_cell(cellData:CellData) -> int:
-	return quadrantData.get_quadrant(cellData.cellx, cellData.celly)
+	return quadrantData.get_quadrant(cellData.pos.x, cellData.pos.y)
 	
 func dbg_log_code() -> void:
 	for y:int in range(boardYSize):
@@ -315,3 +319,20 @@ func is_valid_pos(pos:Vector2i) -> bool:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta:float) -> void:
 	hintFill.update_hint()
+	check_hints_validation()
+
+func check_hints_validation() -> void:
+	if ( !isBoardDirtyForHints ): return
+	for cellData:CellData in allCellDatas:
+		if (cellData.cellState == CellData.ECellState.SET):
+			check_validation_for_cell(cellData)
+	isBoardDirtyForHints = false
+
+func check_validation_for_cell(cellData:CellData) -> void:
+	var pathResult:HintFill.EPathResult = hintFill.check_path(cellData)
+	if ( pathResult == HintFill.EPathResult.SUCCESS ):
+		cellData.cellRef.display_as_valid(true)
+	elif ( pathResult == HintFill.EPathResult.INVALID ):
+		cellData.cellRef.display_as_valid(false)
+	else:
+		cellData.cellRef.hide_validation()

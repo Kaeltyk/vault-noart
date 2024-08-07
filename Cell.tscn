@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://Scripts/Cell.gd" id="2_v2nqb"]
 [ext_resource type="Theme" uid="uid://dj5rm07ftvajr" path="res://Theme_Cell.tres" id="3_7hkqm"]
 
-[node name="Cell" type="NinePatchRect" node_paths=PackedStringArray("m_unsetLabel", "m_setLabel", "m_guessLabel", "m_hintLabel", "m_button", "m_flowUp", "m_flowLeft", "m_flowRight", "m_flowDown")]
+[node name="Cell" type="NinePatchRect" node_paths=PackedStringArray("m_unsetLabel", "m_setLabel", "m_guessLabel", "m_hintLabel", "m_button", "m_flowUp", "m_flowLeft", "m_flowRight", "m_flowDown", "m_invalidLabel", "m_validLabel")]
 self_modulate = Color(0.641934, 0.641934, 0.641934, 1)
 texture_filter = 1
 texture_repeat = 1
@@ -29,6 +29,8 @@ m_flowUp = NodePath("FlowUp")
 m_flowLeft = NodePath("FlowLeft")
 m_flowRight = NodePath("FlowRight")
 m_flowDown = NodePath("FlowDown")
+m_invalidLabel = NodePath("LabelInvalid")
+m_validLabel = NodePath("LabelValid")
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 1
@@ -140,3 +142,27 @@ rotation = 3.14159
 theme = ExtResource("3_7hkqm")
 theme_override_colors/font_color = Color(0.485703, 0.485704, 0.485703, 1)
 text = "^"
+
+[node name="LabelInvalid" type="Label" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 4.0
+offset_top = -6.0
+offset_right = 16.0
+offset_bottom = 27.0
+theme = ExtResource("3_7hkqm")
+theme_override_colors/font_color = Color(1, 0.243137, 0.160784, 1)
+theme_override_font_sizes/font_size = 20
+text = "x"
+
+[node name="LabelValid" type="Label" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 4.0
+offset_top = -6.0
+offset_right = 16.0
+offset_bottom = 27.0
+theme = ExtResource("3_7hkqm")
+theme_override_colors/font_color = Color(0.216, 1, 0.16, 1)
+theme_override_font_sizes/font_size = 20
+text = "v"

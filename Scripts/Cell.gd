@@ -10,6 +10,8 @@ extends NinePatchRect
 @export var m_flowLeft:Label
 @export var m_flowRight:Label
 @export var m_flowDown:Label
+@export var m_invalidLabel:Label
+@export var m_validLabel:Label
 
 var game:VaultGame
 
@@ -23,6 +25,7 @@ func _ready() -> void:
 	Helpers.enable_and_show_node(m_unsetLabel)
 	Helpers.disable_and_hide_node(m_setLabel)
 	Helpers.disable_and_hide_node(m_guessLabel)
+	hide_validation()
 	hide_hint_label()
 	hide_flow()
 	#self.connect("mouse_entered", self, "_on_mouse_entered") /!\ Godot3
@@ -141,3 +144,15 @@ func display_flow(flowdir:HintFill.EFlowDir) -> void:
 			Helpers.disable_and_hide_node(m_flowRight)
 			Helpers.enable_and_show_node(m_flowDown)
 
+func hide_validation() -> void:
+	Helpers.disable_and_hide_node(m_invalidLabel)
+	Helpers.disable_and_hide_node(m_validLabel)
+
+func display_as_valid(valid:bool) -> void:
+	if(valid):
+		Helpers.disable_and_hide_node(m_invalidLabel)
+		Helpers.enable_and_show_node(m_validLabel)
+	else:
+		Helpers.enable_and_show_node(m_invalidLabel)
+		Helpers.disable_and_hide_node(m_validLabel)
+	

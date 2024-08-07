@@ -49,7 +49,6 @@ m_initializer = NodePath("../../..")
 
 [node name="CanvasLayer_Title" type="CanvasLayer" parent="."]
 layer = 98
-visible = false
 
 [node name="Control" type="Control" parent="CanvasLayer_Title"]
 layout_mode = 3
