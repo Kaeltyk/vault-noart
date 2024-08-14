@@ -3,6 +3,7 @@ extends CanvasLayer
 
 @export var m_rulesButton:Button
 @export var m_creditsButton:Button
+@export var m_clearSaveButton:Button
 @export var m_new3x3Button:Button
 @export var m_new4x4Button:Button
 @export var m_new5x5Button:Button
@@ -22,6 +23,7 @@ func _ready() -> void:
 	assert(m_vaultGame != null, "Menu missing m_vaultGame")
 	var _result:int = m_rulesButton.pressed.connect(_on_rulesButton_pressed)
 	_result = m_creditsButton.pressed.connect(_on_creditsButton_pressed)
+	_result = m_clearSaveButton.pressed.connect(_on_clearSaveButton_pressed)
 	_result = m_new3x3Button.pressed.connect(_on_new3x3Button_pressed)
 	_result = m_new4x4Button.pressed.connect(_on_new4x4Button_pressed)
 	_result = m_new5x5Button.pressed.connect(_on_new5x5Button_pressed)
@@ -55,6 +57,9 @@ func _on_creditsButton_pressed() -> void:
 		hide_credits()
 	else:
 		show_credits()
+
+func _on_clearSaveButton_pressed() -> void:
+	SaveManager.clear_save()
 
 func _on_new3x3Button_pressed() -> void: start_new_game(3,3)
 func _on_new4x4Button_pressed() -> void: start_new_game(4,4)

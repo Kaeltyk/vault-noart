@@ -1,10 +1,10 @@
-extends Node
+class_name Helpers
 
-func disable_and_hide_node(node:Node) -> void:
+static func disable_and_hide_node(node:Node) -> void:
 	node.process_mode = Node.PROCESS_MODE_DISABLED
 	node.hide()
 
-func enable_and_show_node(node:Node) -> void:
+static func enable_and_show_node(node:Node) -> void:
 	node.process_mode = Node.PROCESS_MODE_ALWAYS
 	node.show()
 
@@ -14,5 +14,5 @@ func enable_and_show_node(node:Node) -> void:
 	#else:
 		#disable_and_hide_node(node)
 
-func get_frame_string() -> String:
-	return "frame %s" % get_tree().get_frame()
+static func get_frame_string(node:Node) -> String:
+	return "frame %s" % node.get_tree().get_frame()

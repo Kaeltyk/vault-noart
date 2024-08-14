@@ -1,7 +1,7 @@
 Resources:
 	Font: https://fonts.google.com/specimen/Comfortaa/about?preview.text=VAULT%0A123456789%0A%E2%80%A2%20&preview.size=69&preview.layout=grid&classification=Display&stroke=Sans+Serif
 		Confortaa by Johan Aakerlund - Free licence font
-	CC0 License info: https://creativecommons.org/publicdomain/zero/1.0/
+	CC0(TBD)? Creative Commons License info: https://creativecommons.org/publicdomain/zero/1.0/
 	
 
 TODO:
@@ -11,14 +11,25 @@ TODO:
 	• change 'Set' state feedback when the code have a possible path in the grid?
 NEXT-GEN TODO:
 	• make a mode where hacked cells are already there & enough to decypher the code
+		need to investigate tech solutions to do this though
+VARIANTS:
+	• Pixel-art
+	• Flat style with lighting effects (fake reflections like Steam library, reaction to mouse)
+	• 3D? (would be nice to test/explore HD lighting effects)
+	• Gears theme (what style would this fit?)
 
+2024-08-14
+	• resolve panel + button to restart a game of the same size directly
+2024-08-13
+	• Start on saving stats
+	• Helpers switch to static (no more autoload)
 2024-08-07
 	• 'complete/invalid' hacked cells feedbacks
 2024-08-05
 	• create private repo on github & push
 		had to rebase to update the email - default info in gitextensions was private email !!
 			find noreply email provided by github on email prefs under the private email
-			command to update email in git repo: git rebase -i --root -x "git commit --amend --author 'Kaeltyk <86788414+Kaeltyk@users.noreply.github.com>' -CHEAD"
+			command to update email in git repo: git rebase -i --root -x "git commit --amend --author '...@users.noreply.github.com>' -CHEAD"
 	• impossible cells with no possible flow are ok, and they propagate back to their origin to also filter origins when they are not possible
 2024-08-04
 	• Hint algo re-redone with flow info to be able to remove impossible cells in addition to filter guess cells

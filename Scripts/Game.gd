@@ -9,6 +9,7 @@ extends CanvasLayer
 @export var m_highlightControl:Control
 @export var m_menuButton:Button
 @export var m_unlockButton:Button
+@export var m_resultControl:ResultControl
 
 var boardXSize:int = 3
 var boardYSize:int = 7
@@ -27,6 +28,10 @@ var boardResolved:bool = false
 var isBoardDirtyForHints:bool = false
 #var lockLabel:bool = false
 
+func _enter_tree() -> void:
+	SaveManager.load_resource()
+	print("Game _enter_tree %s" %Helpers.get_frame_string(self))
+	
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	quadrantHighlight = m_quadrantHighlightScene.instantiate()
@@ -36,7 +41,9 @@ func _ready() -> void:
 	codeLabel = m_codeLabelScene.instantiate()
 	m_highlightControl.add_child(codeLabel)
 	Helpers.disable_and_hide_node(codeLabel)
-	
+
+	m_resultControl.setup(self)
+
 	var _result:int = m_menuButton.pressed.connect(_on_menuButton_pressed)
 	_result = m_unlockButton.pressed.connect(_on_openlockButton_pressed)
 	
@@ -70,16 +77,36 @@ func resolve_board() -> void:
 	clear_all_hints()
 	update_quadrant_highlight()
 	update_label(null)
+	var success:bool = true
+	var hackCount:int = 0
+	var cellCount:int = boardXSize * boardYSize
 	for cellData:CellData in allCellDatas:
 		cellData.cellRef.lock_button()
 		if cellData.cellState == CellData.ECellState.UNSET:
 			cellData.cellRef.display_error(cellData.value)
+			success = false
 		elif cellData.cellState == CellData.ECellState.GUESS:
 			if (cellData.guess != cellData.value):
 				cellData.cellRef.display_error(cellData.value)
+				success = false
 			else:
 				cellData.cellRef.display_success(cellData.value)
+		elif cellData.cellState == CellData.ECellState.SET:
+			hackCount += 1
+	var score:float = (1.0 - hackCount / float(cellCount)) if success else 0.0
+	update_save(success, score)
+	m_resultControl.open_result(success, score)
 
+func update_save(isSuccess:bool, score:float) -> void:
+	var sizeId:int = boardXSize - 3 # hack, would require a cleaner process, maybe a SaveManager return function
+	SaveManager.saveData.gamesCount[sizeId] += 1
+	if ( isSuccess ):
+		var oldGameCount:int = SaveManager.saveData.gamessuccessCount[sizeId]
+		var oldAverageScore:float = SaveManager.saveData.gamesScoreAvg[sizeId]
+		var newAverageScore:float = (oldAverageScore * oldGameCount + score)/float(oldGameCount+1)
+		SaveManager.saveData.gamessuccessCount[sizeId] += 1
+		SaveManager.saveData.gamesScoreAvg[sizeId] = newAverageScore
+	SaveManager.save_resource()
 
 func clear_old_game() -> void:
 	if (allCellDatas.size() > 0):
@@ -93,6 +120,9 @@ func clear_old_game() -> void:
 	Helpers.disable_and_hide_node(codeLabel)
 	boardResolved = false
 	hintFill.clear()
+
+func new_game_same_size() -> void:
+	start_new_game(boardXSize, boardYSize)
 
 func start_new_game(xsize:int = 4, ysize:int = 4) -> void:
 	print("Starting new game")

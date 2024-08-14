@@ -15,10 +15,6 @@ run/main_scene="res://Main.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
 config/icon="res://icon.svg"
 
-[autoload]
-
-Helpers="*res://Scripts/helpers.gd"
-
 [debug]
 
 gdscript/warnings/untyped_declaration=1
