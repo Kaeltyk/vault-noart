@@ -9,6 +9,7 @@ extends Node2D
 @onready var m_rulesCanvas:CanvasLayer = $CanvasLayer_Rules
 @onready var m_creditsCanvas:CanvasLayer = $CanvasLayer_Credits
 @onready var m_gameCanvas:CanvasLayer = $CanvasLayer_Game
+@onready var m_saveDataCanvas:SaveDataCanvas = $CanvasLayer_SaveData
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -19,7 +20,7 @@ func _ready() -> void:
 	Helpers.disable_and_hide_node(m_rulesCanvas)
 	Helpers.disable_and_hide_node(m_creditsCanvas)
 	Helpers.disable_and_hide_node(m_gameCanvas)
-
+	Helpers.disable_and_hide_node(m_saveDataCanvas)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

@@ -17,7 +17,7 @@ func setup(game:VaultGame) -> void:
 func open_result(isSuccess:bool, score:float) -> void:
 	Helpers.enable_and_show_node(self)
 	m_resultLabel.text = "Success" if isSuccess else "Fail"
-	m_scoreValueLabel.text = "%2.1f" % score
+	m_scoreValueLabel.text = "%2.1f" % (score*100.0)
 
 func _on_newGameButton_pressed() -> void:
 	Helpers.disable_and_hide_node(self)

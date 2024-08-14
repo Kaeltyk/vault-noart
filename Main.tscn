@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://d4ev3rygk1xac"]
+[gd_scene load_steps=18 format=3 uid="uid://d4ev3rygk1xac"]
 
 [ext_resource type="Script" path="res://Scripts/Overlay.gd" id="1_8j862"]
 [ext_resource type="FontFile" uid="uid://dpia17tudvwf1" path="res://Comfortaa-Bold.ttf" id="1_ivdue"]
@@ -13,6 +13,8 @@
 [ext_resource type="PackedScene" uid="uid://x6xpexqui1sb" path="res://QuadrantHighlight.tscn" id="10_rpukv"]
 [ext_resource type="PackedScene" uid="uid://bvid0pbuc7dof" path="res://CodeLabel.tscn" id="11_ud5yb"]
 [ext_resource type="Script" path="res://Scripts/ResultControl.gd" id="13_3uuv8"]
+[ext_resource type="Script" path="res://SaveDataCanvas.gd" id="14_rgo80"]
+[ext_resource type="PackedScene" uid="uid://dmlft7p7ergla" path="res://SaveDataStat.tscn" id="15_bxjbm"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_3xv05"]
 font = ExtResource("1_ivdue")
@@ -143,12 +145,12 @@ offset_top = 285.48
 offset_right = 702.28
 offset_bottom = 287.0
 
-[node name="CanvasLayer_Menu" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_rulesButton", "m_creditsButton", "m_clearSaveButton", "m_new3x3Button", "m_new4x4Button", "m_new5x5Button", "m_new6x6Button", "m_new7x7Button", "m_new8x8Button", "m_initializer", "m_vaultGame")]
+[node name="CanvasLayer_Menu" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_rulesButton", "m_creditsButton", "m_saveDataButton", "m_new3x3Button", "m_new4x4Button", "m_new5x5Button", "m_new6x6Button", "m_new7x7Button", "m_new8x8Button", "m_initializer", "m_vaultGame")]
 layer = 2
 script = ExtResource("5_6q7iv")
 m_rulesButton = NodePath("Control/HBoxContainer2/Button_Rules")
 m_creditsButton = NodePath("Control/HBoxContainer2/Button_Credits")
-m_clearSaveButton = NodePath("Control/HBoxContainer2/Button_ClearSave")
+m_saveDataButton = NodePath("Control/HBoxContainer2/Button_SaveData")
 m_new3x3Button = NodePath("Control/HBoxContainer/Button_3x3")
 m_new4x4Button = NodePath("Control/HBoxContainer/Button_4x4")
 m_new5x5Button = NodePath("Control/HBoxContainer/Button_5x5")
@@ -272,12 +274,12 @@ text = "Credits"
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 
-[node name="Button_ClearSave" type="Button" parent="CanvasLayer_Menu/Control/HBoxContainer2"]
+[node name="Button_SaveData" type="Button" parent="CanvasLayer_Menu/Control/HBoxContainer2"]
 custom_minimum_size = Vector2(180, 60)
 layout_mode = 2
 focus_mode = 0
 theme = ExtResource("8_pna5h")
-text = "Clear Save"
+text = "Save Data"
 
 [node name="CanvasLayer_Rules" type="CanvasLayer" parent="."]
 layer = 3
@@ -304,7 +306,7 @@ anchor_bottom = 0.5
 offset_left = -860.0
 offset_top = -440.0
 offset_right = 860.0
-offset_bottom = 440.0
+offset_bottom = 400.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
@@ -337,7 +339,7 @@ anchor_right = 0.5
 offset_left = -810.0
 offset_top = 82.0
 offset_right = 810.0
-offset_bottom = 836.0
+offset_bottom = 782.0
 grow_horizontal = 2
 theme = ExtResource("8_pna5h")
 text = "Find the Vault code hacking a minimum number of cells.
@@ -386,7 +388,7 @@ anchor_bottom = 0.5
 offset_left = -860.0
 offset_top = -440.0
 offset_right = 860.0
-offset_bottom = 440.0
+offset_bottom = 400.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
@@ -419,7 +421,7 @@ anchor_right = 0.5
 offset_left = -810.0
 offset_top = 82.0
 offset_right = 810.0
-offset_bottom = 836.0
+offset_bottom = 782.0
 grow_horizontal = 2
 theme_override_fonts/font = ExtResource("1_ivdue")
 theme_override_font_sizes/font_size = 32
@@ -442,6 +444,7 @@ wrap_mode = 1
 autowrap_mode = 2
 
 [node name="CanvasLayer_Game" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_initializer", "m_boardControl", "m_highlightControl", "m_menuButton", "m_unlockButton", "m_resultControl")]
+visible = false
 script = ExtResource("8_aegs5")
 m_initializer = NodePath("..")
 m_cellScene = ExtResource("4_f2ehu")
@@ -578,3 +581,63 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("8_pna5h")
 text = " New Game"
+
+[node name="CanvasLayer_SaveData" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_saveDataStatContainer")]
+layer = 5
+script = ExtResource("14_rgo80")
+m_saveDataStat = ExtResource("15_bxjbm")
+m_saveDataStatContainer = NodePath("Control/NinePatchRect/VBoxContainer")
+
+[node name="Control" type="Control" parent="CanvasLayer_SaveData"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="CanvasLayer_SaveData/Control"]
+self_modulate = Color(0.238, 0.3332, 0.35, 1)
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -860.0
+offset_top = -440.0
+offset_right = 860.0
+offset_bottom = 400.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+texture = ExtResource("6_rm1kv")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Label_SaveData" type="Label" parent="CanvasLayer_SaveData/Control/NinePatchRect"]
+layout_mode = 1
+offset_left = 17.0
+offset_top = 16.0
+offset_right = 230.0
+offset_bottom = 57.0
+text = "• SAVE DATA •"
+label_settings = SubResource("LabelSettings_jhysy")
+horizontal_alignment = 1
+vertical_alignment = 1
+justification_flags = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer_SaveData/Control/NinePatchRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1

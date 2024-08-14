@@ -17,6 +17,6 @@ static func load_resource() -> void:
 		print("Load Save")
 		saveData = ResourceLoader.load(SAVE_PATH)
 
-static func clear_save():
+static func clear_save() -> void:
 	saveData = SaveResource.new()
 	save_resource()

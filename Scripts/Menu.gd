@@ -3,7 +3,7 @@ extends CanvasLayer
 
 @export var m_rulesButton:Button
 @export var m_creditsButton:Button
-@export var m_clearSaveButton:Button
+@export var m_saveDataButton:Button
 @export var m_new3x3Button:Button
 @export var m_new4x4Button:Button
 @export var m_new5x5Button:Button
@@ -15,6 +15,7 @@ extends CanvasLayer
 
 var areRulesDisplayed:bool = false
 var areCreditsDisplayed:bool = false
+var areSaveDatasDisplayed:bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -23,7 +24,7 @@ func _ready() -> void:
 	assert(m_vaultGame != null, "Menu missing m_vaultGame")
 	var _result:int = m_rulesButton.pressed.connect(_on_rulesButton_pressed)
 	_result = m_creditsButton.pressed.connect(_on_creditsButton_pressed)
-	_result = m_clearSaveButton.pressed.connect(_on_clearSaveButton_pressed)
+	_result = m_saveDataButton.pressed.connect(_on_saveDataButton_pressed)
 	_result = m_new3x3Button.pressed.connect(_on_new3x3Button_pressed)
 	_result = m_new4x4Button.pressed.connect(_on_new4x4Button_pressed)
 	_result = m_new5x5Button.pressed.connect(_on_new5x5Button_pressed)
@@ -40,6 +41,8 @@ func close_menu() -> void:
 		hide_rules()
 	if ( areCreditsDisplayed ):
 		hide_credits()
+	if ( areSaveDatasDisplayed ):
+		hide_saveDatas()
 	Helpers.disable_and_hide_node(self)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -58,8 +61,11 @@ func _on_creditsButton_pressed() -> void:
 	else:
 		show_credits()
 
-func _on_clearSaveButton_pressed() -> void:
-	SaveManager.clear_save()
+func _on_saveDataButton_pressed() -> void:
+	if ( areSaveDatasDisplayed ):
+		hide_saveDatas()
+	else:
+		show_saveDatas()
 
 func _on_new3x3Button_pressed() -> void: start_new_game(3,3)
 func _on_new4x4Button_pressed() -> void: start_new_game(4,4)
@@ -77,6 +83,7 @@ func start_new_game(sizex:int, sizey:int) -> void:
 
 func show_rules() -> void:
 	if ( areCreditsDisplayed ):hide_credits()
+	if ( areSaveDatasDisplayed ):hide_saveDatas()
 	Helpers.enable_and_show_node(m_initializer.m_rulesCanvas)
 	areRulesDisplayed = true
 
@@ -86,9 +93,21 @@ func hide_rules() -> void:
 
 func show_credits() -> void:
 	if ( areRulesDisplayed ):hide_rules()
+	if ( areSaveDatasDisplayed ):hide_saveDatas()
 	Helpers.enable_and_show_node(m_initializer.m_creditsCanvas)
 	areCreditsDisplayed = true
 
 func hide_credits() -> void:
 	Helpers.disable_and_hide_node(m_initializer.m_creditsCanvas)
 	areCreditsDisplayed = false
+
+func show_saveDatas() -> void:
+	if ( areRulesDisplayed ):hide_rules()
+	if ( areCreditsDisplayed ):hide_credits()
+	Helpers.enable_and_show_node(m_initializer.m_saveDataCanvas)
+	m_initializer.m_saveDataCanvas.update_stats()
+	areSaveDatasDisplayed = true
+
+func hide_saveDatas() -> void:
+	Helpers.disable_and_hide_node(m_initializer.m_saveDataCanvas)
+	areSaveDatasDisplayed = false
