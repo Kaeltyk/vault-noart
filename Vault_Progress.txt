@@ -5,20 +5,18 @@ Resources:
 	
 
 TODO:
-	• shift help key to display path & possibilities on hacked cell?
-		same key on other cells to display possibilities from existing codes?
-	• display all codes by spreading labels around?
-	• change 'Set' state feedback when the code have a possible path in the grid?
+	• game exe Icon
 NEXT-GEN TODO:
 	• make a mode where hacked cells are already there & enough to decypher the code
 		need to investigate tech solutions to do this though
-VARIANTS:
+VARIANTS: ('ART' versions)
 	• Pixel-art
 	• Flat style with lighting effects (fake reflections like Steam library, reaction to mouse)
 	• 3D? (would be nice to test/explore HD lighting effects)
 	• Gears theme (what style would this fit?)
 
 2024-08-14
+	• Save Data/Stats panel, with clear save button
 	• resolve panel + button to restart a game of the same size directly
 2024-08-13
 	• Start on saving stats
