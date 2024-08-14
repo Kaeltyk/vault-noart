@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://dmlft7p7ergla"]
 
 [ext_resource type="Texture2D" uid="uid://dfhhnxtq1ojty" path="res://Textures/White16.png" id="1_fiy5s"]
-[ext_resource type="Script" path="res://SaveDataStat.gd" id="2_7cu8k"]
+[ext_resource type="Script" path="res://Scripts/SaveDataStat.gd" id="2_7cu8k"]
 [ext_resource type="Theme" uid="uid://dj5rm07ftvajr" path="res://Theme_Cell.tres" id="2_tr6ys"]
 
 [node name="SaveDataStat" type="TextureRect"]

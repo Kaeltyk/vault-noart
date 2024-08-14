@@ -1,7 +1,7 @@
 [gd_scene load_steps=18 format=3 uid="uid://d4ev3rygk1xac"]
 
 [ext_resource type="Script" path="res://Scripts/Overlay.gd" id="1_8j862"]
-[ext_resource type="FontFile" uid="uid://dpia17tudvwf1" path="res://Comfortaa-Bold.ttf" id="1_ivdue"]
+[ext_resource type="FontFile" uid="uid://dpia17tudvwf1" path="res://Resources/Comfortaa-Bold.ttf" id="1_ivdue"]
 [ext_resource type="Script" path="res://Scripts/Initializer.gd" id="1_vjbns"]
 [ext_resource type="LabelSettings" uid="uid://bspekmsvysonp" path="res://LabelSetting_Title.tres" id="3_l2f2k"]
 [ext_resource type="Script" path="res://Scripts/Title.gd" id="3_tf66t"]
@@ -13,7 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://x6xpexqui1sb" path="res://QuadrantHighlight.tscn" id="10_rpukv"]
 [ext_resource type="PackedScene" uid="uid://bvid0pbuc7dof" path="res://CodeLabel.tscn" id="11_ud5yb"]
 [ext_resource type="Script" path="res://Scripts/ResultControl.gd" id="13_3uuv8"]
-[ext_resource type="Script" path="res://SaveDataCanvas.gd" id="14_rgo80"]
+[ext_resource type="Script" path="res://Scripts/SaveDataCanvas.gd" id="14_rgo80"]
 [ext_resource type="PackedScene" uid="uid://dmlft7p7ergla" path="res://SaveDataStat.tscn" id="15_bxjbm"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_3xv05"]

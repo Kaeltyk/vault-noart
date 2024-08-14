@@ -1,6 +1,6 @@
 [gd_resource type="Theme" load_steps=3 format=3 uid="uid://dj5rm07ftvajr"]
 
-[ext_resource type="FontFile" uid="uid://dpia17tudvwf1" path="res://Comfortaa-Bold.ttf" id="1_usri5"]
+[ext_resource type="FontFile" uid="uid://dpia17tudvwf1" path="res://Resources/Comfortaa-Bold.ttf" id="1_usri5"]
 
 [sub_resource type="FontVariation" id="FontVariation_pxlsr"]
 base_font = ExtResource("1_usri5")
