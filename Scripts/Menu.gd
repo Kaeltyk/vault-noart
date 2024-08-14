@@ -90,6 +90,7 @@ func show_rules() -> void:
 func hide_rules() -> void:
 	Helpers.disable_and_hide_node(m_initializer.m_rulesCanvas)
 	areRulesDisplayed = false
+	m_rulesButton.release_focus()
 
 func show_credits() -> void:
 	if ( areRulesDisplayed ):hide_rules()
@@ -100,6 +101,7 @@ func show_credits() -> void:
 func hide_credits() -> void:
 	Helpers.disable_and_hide_node(m_initializer.m_creditsCanvas)
 	areCreditsDisplayed = false
+	m_creditsButton.release_focus()
 
 func show_saveDatas() -> void:
 	if ( areRulesDisplayed ):hide_rules()
@@ -111,3 +113,4 @@ func show_saveDatas() -> void:
 func hide_saveDatas() -> void:
 	Helpers.disable_and_hide_node(m_initializer.m_saveDataCanvas)
 	areSaveDatasDisplayed = false
+	m_saveDataButton.release_focus()

@@ -259,25 +259,26 @@ grow_vertical = 0
 [node name="Button_Rules" type="Button" parent="CanvasLayer_Menu/Control/HBoxContainer2"]
 custom_minimum_size = Vector2(180, 60)
 layout_mode = 2
-focus_mode = 0
+focus_mode = 1
 theme = ExtResource("8_pna5h")
 text = "Rules"
 
 [node name="Button_Credits" type="Button" parent="CanvasLayer_Menu/Control/HBoxContainer2"]
 custom_minimum_size = Vector2(180, 60)
 layout_mode = 2
-focus_mode = 0
+focus_mode = 1
 theme = ExtResource("8_pna5h")
 text = "Credits"
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer_Menu/Control/HBoxContainer2"]
+visible = false
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 
 [node name="Button_SaveData" type="Button" parent="CanvasLayer_Menu/Control/HBoxContainer2"]
 custom_minimum_size = Vector2(180, 60)
 layout_mode = 2
-focus_mode = 0
+focus_mode = 1
 theme = ExtResource("8_pna5h")
 text = "Save Data"
 
@@ -427,9 +428,9 @@ theme_override_fonts/font = ExtResource("1_ivdue")
 theme_override_font_sizes/font_size = 32
 text = "Kaeltyk - 2024
 
-Original code source in Basic + rules are from the 'Coffre-fort' game in 'Jeux & Stratégie' issue n° 23, oct-nov 1983
+Original code source in Basic + rules are from the 'Coffre-fort' game in 'Jeux & Stratégie' issue n° 23, oct-nov 1983.
 
-Re-made with Godot as a training project, after previous iterations (Basic, Turbo Pascal, Processing) and with additional quality of life features
+Re-made with Godot as a training project, after previous iterations (in Basic on Apple ][, Turbo Pascal on PC 80286 rendered in Mode 13h, Processing), with additional quality of life features for this version.
 
 Font used is 'Confortaa' by Johan Aakerlund - Free licence font - from fonts.google.com"
 editable = false
@@ -582,11 +583,13 @@ grow_vertical = 2
 theme = ExtResource("8_pna5h")
 text = " New Game"
 
-[node name="CanvasLayer_SaveData" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_saveDataStatContainer")]
+[node name="CanvasLayer_SaveData" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_saveDataStatContainer", "m_clearSaveButton")]
 layer = 5
+visible = false
 script = ExtResource("14_rgo80")
 m_saveDataStat = ExtResource("15_bxjbm")
 m_saveDataStatContainer = NodePath("Control/NinePatchRect/VBoxContainer")
+m_clearSaveButton = NodePath("Control/NinePatchRect/Button_ClearSave")
 
 [node name="Control" type="Control" parent="CanvasLayer_SaveData"]
 layout_mode = 3
@@ -641,3 +644,20 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
+
+[node name="Button_ClearSave" type="Button" parent="CanvasLayer_SaveData/Control/NinePatchRect"]
+custom_minimum_size = Vector2(160, 48)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -158.0
+offset_top = -57.0
+offset_right = -16.0
+offset_bottom = -16.0
+grow_horizontal = 0
+grow_vertical = 0
+theme = ExtResource("8_pna5h")
+text = "Clear Save"

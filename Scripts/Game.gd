@@ -120,6 +120,7 @@ func clear_old_game() -> void:
 	Helpers.disable_and_hide_node(codeLabel)
 	boardResolved = false
 	hintFill.clear()
+	m_resultControl.close_result()
 
 func new_game_same_size() -> void:
 	start_new_game(boardXSize, boardYSize)

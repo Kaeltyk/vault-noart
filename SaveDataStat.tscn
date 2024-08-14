@@ -5,7 +5,7 @@
 [ext_resource type="Theme" uid="uid://dj5rm07ftvajr" path="res://Theme_Cell.tres" id="2_tr6ys"]
 
 [node name="SaveDataStat" type="TextureRect"]
-self_modulate = Color(0.281046, 0.438246, 0.433437, 1)
+self_modulate = Color(0.116112, 0.201789, 0.199241, 1)
 custom_minimum_size = Vector2(0, 60)
 size_flags_vertical = 4
 texture = ExtResource("1_fiy5s")
@@ -34,7 +34,7 @@ text = "[XxX]"
 layout_mode = 2
 theme = ExtResource("2_tr6ys")
 theme_override_font_sizes/font_size = 30
-text = ":"
+text = "•"
 
 [node name="MarginContainer2" type="MarginContainer" parent="HBoxContainer"]
 custom_minimum_size = Vector2(30, 0)
