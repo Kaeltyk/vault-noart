@@ -445,7 +445,6 @@ wrap_mode = 1
 autowrap_mode = 2
 
 [node name="CanvasLayer_Game" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_initializer", "m_boardControl", "m_highlightControl", "m_menuButton", "m_unlockButton", "m_resultControl")]
-visible = false
 script = ExtResource("8_aegs5")
 m_initializer = NodePath("..")
 m_cellScene = ExtResource("4_f2ehu")
@@ -482,7 +481,7 @@ offset_left = 334.0
 offset_top = 27.0
 offset_right = 443.0
 offset_bottom = 68.0
-focus_mode = 0
+focus_mode = 1
 theme = ExtResource("8_pna5h")
 text = "Menu"
 

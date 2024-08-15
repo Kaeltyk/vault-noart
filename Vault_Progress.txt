@@ -1,7 +1,7 @@
 Resources:
 	Font: https://fonts.google.com/specimen/Comfortaa/about?preview.text=VAULT%0A123456789%0A%E2%80%A2%20&preview.size=69&preview.layout=grid&classification=Display&stroke=Sans+Serif
 		Confortaa by Johan Aakerlund - Free licence font
-	CC0(TBD)? Creative Commons License info: https://creativecommons.org/publicdomain/zero/1.0/
+	License TDB (CC0)? Creative Commons License info: https://creativecommons.org/publicdomain/zero/1.0/
 	
 
 TODO:
@@ -15,7 +15,10 @@ VARIANTS: ('ART' versions)
 	• 3D? (would be nice to test/explore HD lighting effects)
 	• Gears theme (what style would this fit?)
 
+2024-08-15
+	• Update Focus on in-game menu button
 2024-08-14
+	• Update focus on menu rules/credits/save data buttons
 	• Save Data/Stats panel, with clear save button
 	• resolve panel + button to restart a game of the same size directly
 2024-08-13

@@ -65,7 +65,7 @@ func _on_menuButton_pressed() -> void:
 		Helpers.enable_and_show_node(m_initializer.m_menuCanvas)
 	else:
 		m_initializer.m_menuCanvas.close_menu()
-
+		m_menuButton.release_focus()
 
 func _on_openlockButton_pressed() -> void:
 	if ( !boardResolved ):
