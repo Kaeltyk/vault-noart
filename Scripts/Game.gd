@@ -23,7 +23,11 @@ var quadrantHighlight:NinePatchRect
 
 var hintFill:HintFill
 
+enum ELabelPos { TOP, BOTTOM }
 var codeLabel:CodeLabel
+var hoverCodeLabel:CodeLabel
+var codeLabelHeight:float
+
 var boardResolved:bool = false
 var isBoardDirtyForHints:bool = false
 #var lockLabel:bool = false
@@ -41,6 +45,12 @@ func _ready() -> void:
 	codeLabel = m_codeLabelScene.instantiate()
 	m_highlightControl.add_child(codeLabel)
 	Helpers.disable_and_hide_node(codeLabel)
+	codeLabelHeight = codeLabel.size.y
+	
+	hoverCodeLabel = m_codeLabelScene.instantiate()
+	m_highlightControl.add_child(hoverCodeLabel)
+	Helpers.disable_and_hide_node(hoverCodeLabel)
+	
 
 	m_resultControl.setup(self)
 
@@ -76,7 +86,8 @@ func resolve_board() -> void:
 	currentHoveredCell = null
 	clear_all_hints()
 	update_quadrant_highlight()
-	update_label(null)
+	update_hover_label(null)
+	update_perma_label(null)
 	var success:bool = true
 	var hackCount:int = 0
 	var cellCount:int = boardXSize * boardYSize
@@ -118,6 +129,7 @@ func clear_old_game() -> void:
 	resetGuessAutoMode = false;
 	Helpers.disable_and_hide_node(quadrantHighlight)
 	Helpers.disable_and_hide_node(codeLabel)
+	Helpers.disable_and_hide_node(hoverCodeLabel)
 	boardResolved = false
 	hintFill.clear()
 	m_resultControl.close_result()
@@ -152,7 +164,9 @@ func start_new_game(xsize:int = 4, ysize:int = 4) -> void:
 	#var _result:int = hackedCodes.resize(allCells.size())
 	dbg_log_code()
 	
+	# update code labels pos according to (dynamic) board size
 	codeLabel.global_position = Vector2(xtopOffset + 64.0, ytopOffset + 64.0 * boardYSize + 64.0)
+	hoverCodeLabel.global_position = Vector2(xtopOffset + 64.0, ytopOffset - 64.0 - 64.0)
 
 
 func on_cell_enter(enteredCell: Cell) -> void:
@@ -160,6 +174,9 @@ func on_cell_enter(enteredCell: Cell) -> void:
 	if (resetGuessAutoMode):
 		reset_guess_if_possible()
 	update_quadrant_highlight()
+	var cellData:CellData = get_cellData_from_cell(currentHoveredCell)
+	if ( cellData.cellState == CellData.ECellState.SET ):
+		update_hover_label(cellData)
 	#print("on_cell_enter current cell: %s" % currentHoveredCell.name)
 
 
@@ -167,6 +184,7 @@ func on_cell_exit(exitedCell: Cell) -> void:
 	if (exitedCell == currentHoveredCell):
 		currentHoveredCell = null
 	update_quadrant_highlight()
+	update_hover_label(null)
 	#if (currentHoveredCell != null):
 		#print("on_cell_exit current cell: %s" % currentHoveredCell.name)
 	#else:
@@ -233,27 +251,19 @@ func on_cell_hacked(hackedCell:Cell) -> void:
 	cellData.cellState = CellData.ECellState.SET
 	cellData.set_hacked()
 	update_quadrant_highlight()
+	update_hover_label(cellData)
 
 func on_cell_clicked(clickedCell:Cell) -> void:
 	var cellData:CellData = get_cellData_from_cell(clickedCell)
 	if (cellData.cellState == CellData.ECellState.SET):
 		clear_all_hints()
-		hintFill.start_hint(cellData)
-		
-		
-	#if (currentHoveredCell != null):
-		#var cellData:CellData = get_cellData_from_cell(currentHoveredCell)
-		#var canLockLabel:bool = cellData.cellState == ECellState.SET
-		#if (canLockLabel):
-			#lockLabel = true
-			#update_label(cellData)
-		#elif (lockLabel):
-			#lockLabel = false
-			#update_label(null)
-				
-	
-	#var cellData:CellData = get_cellData_from_cell(clickedCell)
-	#var cellQuadrant:int = quadrantData.get_quadrant(cellData.cellx, cellData.celly)
+		if (hintFill.hintCellData == cellData):
+			hintFill.clear()
+			update_perma_label(null)
+		else:
+			hintFill.clear()
+			hintFill.start_hint(cellData)
+			update_perma_label(cellData)
 
 func generate_code_for_cell(cellData:CellData) -> void:
 	var targetBounds:Bounds2i = quadrantData.get_quadrant_Bounds2i(cellData.oppositequadrant)
@@ -318,18 +328,26 @@ func update_quadrant_highlight() -> void:
 	var bounds:Bounds2i = quadrantData.get_quadrant_Bounds2i(cellData.oppositequadrant)
 	quadrantHighlight.global_position = Vector2(xtopOffset + 64.0*bounds.xmin, ytopOffset + 64.0*bounds.ymin)
 	quadrantHighlight.size = Vector2(64.0*(bounds.xmax-bounds.xmin+1), 64.0*(bounds.ymax-bounds.ymin+1))
-	#if (!lockLabel):
-	update_label(cellData)
 
-func update_label(cellData:CellData) -> void:
+func update_hover_label(cellData:CellData) -> void:
+	update_label(cellData, hoverCodeLabel, ELabelPos.BOTTOM)
+func update_perma_label(cellData:CellData) -> void:
+	update_label(cellData, codeLabel, ELabelPos.TOP)
+	
+func update_label(cellData:CellData, updatedCodeLabel:CodeLabel, labelPos:ELabelPos) -> void:
 	if (cellData == null):
-		Helpers.disable_and_hide_node(codeLabel)
+		Helpers.disable_and_hide_node(updatedCodeLabel)
 		return;
-	Helpers.enable_and_show_node(codeLabel)
-	codeLabel.text = cellData.codeStr
-	codeLabel.line.clear_points()
-	codeLabel.line.add_point(Vector2(0, 0))
-	codeLabel.line.add_point(cellData.cellRef.global_position - codeLabel.global_position + Vector2(8,64-8))
+	Helpers.enable_and_show_node(updatedCodeLabel)
+	updatedCodeLabel.text = cellData.codeStr
+	updatedCodeLabel.line.clear_points()
+	match labelPos:
+		ELabelPos.BOTTOM:
+			updatedCodeLabel.line.add_point(Vector2(0, codeLabelHeight))
+			updatedCodeLabel.line.add_point(cellData.cellRef.global_position - updatedCodeLabel.global_position + Vector2(8,8))
+		ELabelPos.TOP:
+			updatedCodeLabel.line.add_point(Vector2(0, 0))
+			updatedCodeLabel.line.add_point(cellData.cellRef.global_position - updatedCodeLabel.global_position + Vector2(8,64-8))
 	#codeLabel.set_anchors_preset(Control.PRESET_TOP_LEFT, true)
 
 func clear_all_hints() -> void:

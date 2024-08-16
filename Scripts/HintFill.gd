@@ -54,11 +54,6 @@ func _init(game:VaultGame) -> void:
 	vaultGame = game
 
 func start_hint(startCellData:CellData) -> void:
-	if (hintCellData == startCellData):
-		clear()
-		#update_hint()
-		return
-		
 	hintCellData = startCellData
 	targetBounds = vaultGame.quadrantData.get_quadrant_Bounds2i(hintCellData.oppositequadrant)
 	allFlowCells.clear()

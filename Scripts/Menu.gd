@@ -4,6 +4,7 @@ extends CanvasLayer
 @export var m_rulesButton:Button
 @export var m_creditsButton:Button
 @export var m_saveDataButton:Button
+@export var m_exitButton:Button
 @export var m_new3x3Button:Button
 @export var m_new4x4Button:Button
 @export var m_new5x5Button:Button
@@ -31,6 +32,7 @@ func _ready() -> void:
 	_result = m_new6x6Button.pressed.connect(_on_new6x6Button_pressed)
 	_result = m_new7x7Button.pressed.connect(_on_new7x7Button_pressed)
 	_result = m_new8x8Button.pressed.connect(_on_new8x8Button_pressed)
+	_result = m_exitButton.pressed.connect(_on_exitButton_pressed)
 
 func open_menu() -> void:
 	Helpers.enable_and_show_node(self)
@@ -66,6 +68,9 @@ func _on_saveDataButton_pressed() -> void:
 		hide_saveDatas()
 	else:
 		show_saveDatas()
+
+func _on_exitButton_pressed() -> void:
+	get_tree().quit()
 
 func _on_new3x3Button_pressed() -> void: start_new_game(3,3)
 func _on_new4x4Button_pressed() -> void: start_new_game(4,4)

@@ -145,12 +145,13 @@ offset_top = 285.48
 offset_right = 702.28
 offset_bottom = 287.0
 
-[node name="CanvasLayer_Menu" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_rulesButton", "m_creditsButton", "m_saveDataButton", "m_new3x3Button", "m_new4x4Button", "m_new5x5Button", "m_new6x6Button", "m_new7x7Button", "m_new8x8Button", "m_initializer", "m_vaultGame")]
+[node name="CanvasLayer_Menu" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_rulesButton", "m_creditsButton", "m_saveDataButton", "m_exitButton", "m_new3x3Button", "m_new4x4Button", "m_new5x5Button", "m_new6x6Button", "m_new7x7Button", "m_new8x8Button", "m_initializer", "m_vaultGame")]
 layer = 2
 script = ExtResource("5_6q7iv")
 m_rulesButton = NodePath("Control/HBoxContainer2/Button_Rules")
 m_creditsButton = NodePath("Control/HBoxContainer2/Button_Credits")
 m_saveDataButton = NodePath("Control/HBoxContainer2/Button_SaveData")
+m_exitButton = NodePath("Control/HBoxContainer2/Button_Exit")
 m_new3x3Button = NodePath("Control/HBoxContainer/Button_3x3")
 m_new4x4Button = NodePath("Control/HBoxContainer/Button_4x4")
 m_new5x5Button = NodePath("Control/HBoxContainer/Button_5x5")
@@ -270,17 +271,23 @@ focus_mode = 1
 theme = ExtResource("8_pna5h")
 text = "Credits"
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer_Menu/Control/HBoxContainer2"]
-visible = false
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 2
-
 [node name="Button_SaveData" type="Button" parent="CanvasLayer_Menu/Control/HBoxContainer2"]
 custom_minimum_size = Vector2(180, 60)
 layout_mode = 2
 focus_mode = 1
 theme = ExtResource("8_pna5h")
 text = "Save Data"
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer_Menu/Control/HBoxContainer2"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="Button_Exit" type="Button" parent="CanvasLayer_Menu/Control/HBoxContainer2"]
+custom_minimum_size = Vector2(180, 60)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("8_pna5h")
+text = "Quit Game"
 
 [node name="CanvasLayer_Rules" type="CanvasLayer" parent="."]
 layer = 3
@@ -445,6 +452,7 @@ wrap_mode = 1
 autowrap_mode = 2
 
 [node name="CanvasLayer_Game" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_initializer", "m_boardControl", "m_highlightControl", "m_menuButton", "m_unlockButton", "m_resultControl")]
+visible = false
 script = ExtResource("8_aegs5")
 m_initializer = NodePath("..")
 m_cellScene = ExtResource("4_f2ehu")

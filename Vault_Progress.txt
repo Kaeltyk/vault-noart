@@ -15,6 +15,9 @@ VARIANTS: ('ART' versions)
 	• 3D? (would be nice to test/explore HD lighting effects)
 	• Gears theme (what style would this fit?)
 
+2024-08-16
+	• split hover + permanent label toggle for clicked hacked cells (matches hint toggle)
+	• Exit Game button
 2024-08-15
 	• Update Focus on in-game menu button
 2024-08-14
