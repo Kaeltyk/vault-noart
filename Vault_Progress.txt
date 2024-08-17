@@ -16,6 +16,8 @@ VARIANTS: ('ART' versions)
 	• Gears theme (what style would this fit?)
 
 2024-08-16
+	• Clean some code/data
+2024-08-16
 	• split hover + permanent label toggle for clicked hacked cells (matches hint toggle)
 	• Exit Game button
 2024-08-15

@@ -1,19 +1,19 @@
 class_name Cell
 extends NinePatchRect
 
-@export var m_unsetLabel:Label
-@export var m_setLabel:Label
-@export var m_guessLabel:Label
-@export var m_hintLabel:Label
-@export var m_button:Button
-@export var m_flowUp:Label
-@export var m_flowLeft:Label
-@export var m_flowRight:Label
-@export var m_flowDown:Label
-@export var m_invalidLabel:Label
-@export var m_validLabel:Label
+@onready var m_unsetLabel:Label = $Label_Unset
+@onready var m_setLabel:Label = $Label_Set
+@onready var m_guessLabel:Label = $Label_Guess
+@onready var m_hintLabel:Label = $Label_Hint
+@onready var m_button:Button = $Button
+@onready var m_flowUp:Label = $FlowUp
+@onready var m_flowLeft:Label = $FlowLeft
+@onready var m_flowRight:Label = $FlowRight
+@onready var m_flowDown:Label = $FlowDown
+@onready var m_invalidLabel:Label = $LabelInvalid
+@onready var m_validLabel:Label = $LabelValid
 
-var game:VaultGame
+var vaultGame:VaultGame
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -33,6 +33,10 @@ func _ready() -> void:
 	_result = m_button.mouse_exited.connect(_on_mouse_exited)
 	_result = m_button.gui_input.connect(_on_gui_input)
 
+func initialize(game:VaultGame, gpos:Vector2i) -> void:
+	vaultGame = game
+	global_position = gpos
+
 func lock_button() -> void:
 	#print("locking button for Cell %s"%name)
 	Helpers.disable_and_hide_node(m_button)
@@ -50,19 +54,19 @@ func _on_gui_input(event:InputEvent) -> void:
 	if event is InputEventMouseButton:
 		var eventMouseButton:InputEventMouseButton = event as InputEventMouseButton
 		if eventMouseButton.button_index == MOUSE_BUTTON_RIGHT and eventMouseButton.pressed:
-			game.on_cell_hacked(self)
+			vaultGame.on_cell_hacked(self)
 		if eventMouseButton.button_index == MOUSE_BUTTON_LEFT and eventMouseButton.pressed:
-			game.on_cell_clicked(self)
+			vaultGame.on_cell_clicked(self)
 			#print(name+":"+event.as_text())
 	pass
 
 func _on_mouse_entered() -> void:
-	game.on_cell_enter(self)
+	vaultGame.on_cell_enter(self)
 	#print("entered "+name)
 	pass
 
 func _on_mouse_exited() -> void:
-	game.on_cell_exit(self)
+	vaultGame.on_cell_exit(self)
 	#print("exit "+name)
 	pass
 

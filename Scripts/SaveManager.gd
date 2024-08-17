@@ -9,6 +9,7 @@ static func save_resource() -> void:
 	if ( saveError != OK ):
 		print("Save Failure: [%s]" % saveError)
 
+# resource loading/creation must be done before _ready() calls, so in an _enter_tree()
 static func load_resource() -> void:
 	if !ResourceLoader.exists(SAVE_PATH):
 		print("Create Save")

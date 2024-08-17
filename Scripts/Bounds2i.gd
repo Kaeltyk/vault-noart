@@ -1,5 +1,5 @@
 class_name Bounds2i
-extends Object
+#extends Object
 
 # Helper class to handle int (grid) bound values
 

@@ -1,16 +1,16 @@
 class_name Menu
 extends CanvasLayer
 
-@export var m_rulesButton:Button
-@export var m_creditsButton:Button
-@export var m_saveDataButton:Button
-@export var m_exitButton:Button
-@export var m_new3x3Button:Button
-@export var m_new4x4Button:Button
-@export var m_new5x5Button:Button
-@export var m_new6x6Button:Button
-@export var m_new7x7Button:Button
-@export var m_new8x8Button:Button
+@onready var m_rulesButton:Button = $Control/HBoxContainer2/Button_Rules
+@onready var m_creditsButton:Button = $Control/HBoxContainer2/Button_Credits
+@onready var m_saveDataButton:Button = $Control/HBoxContainer2/Button_SaveData
+@onready var m_exitButton:Button = $Control/HBoxContainer2/Button_Exit
+@onready var m_new3x3Button:Button = $Control/HBoxContainer/Button_3x3
+@onready var m_new4x4Button:Button = $Control/HBoxContainer/Button_4x4
+@onready var m_new5x5Button:Button = $Control/HBoxContainer/Button_5x5
+@onready var m_new6x6Button:Button = $Control/HBoxContainer/Button_6x6
+@onready var m_new7x7Button:Button = $Control/HBoxContainer/Button_7x7
+@onready var m_new8x8Button:Button = $Control/HBoxContainer/Button_8x8
 @export var m_initializer:Initializer
 @export var m_vaultGame:VaultGame
 

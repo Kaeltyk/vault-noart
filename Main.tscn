@@ -145,19 +145,9 @@ offset_top = 285.48
 offset_right = 702.28
 offset_bottom = 287.0
 
-[node name="CanvasLayer_Menu" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_rulesButton", "m_creditsButton", "m_saveDataButton", "m_exitButton", "m_new3x3Button", "m_new4x4Button", "m_new5x5Button", "m_new6x6Button", "m_new7x7Button", "m_new8x8Button", "m_initializer", "m_vaultGame")]
+[node name="CanvasLayer_Menu" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_initializer", "m_vaultGame")]
 layer = 2
 script = ExtResource("5_6q7iv")
-m_rulesButton = NodePath("Control/HBoxContainer2/Button_Rules")
-m_creditsButton = NodePath("Control/HBoxContainer2/Button_Credits")
-m_saveDataButton = NodePath("Control/HBoxContainer2/Button_SaveData")
-m_exitButton = NodePath("Control/HBoxContainer2/Button_Exit")
-m_new3x3Button = NodePath("Control/HBoxContainer/Button_3x3")
-m_new4x4Button = NodePath("Control/HBoxContainer/Button_4x4")
-m_new5x5Button = NodePath("Control/HBoxContainer/Button_5x5")
-m_new6x6Button = NodePath("Control/HBoxContainer/Button_6x6")
-m_new7x7Button = NodePath("Control/HBoxContainer/Button_7x7")
-m_new8x8Button = NodePath("Control/HBoxContainer/Button_8x8")
 m_initializer = NodePath("..")
 m_vaultGame = NodePath("../CanvasLayer_Game")
 
@@ -451,18 +441,13 @@ middle_mouse_paste_enabled = false
 wrap_mode = 1
 autowrap_mode = 2
 
-[node name="CanvasLayer_Game" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_initializer", "m_boardControl", "m_highlightControl", "m_menuButton", "m_unlockButton", "m_resultControl")]
+[node name="CanvasLayer_Game" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_initializer")]
 visible = false
 script = ExtResource("8_aegs5")
 m_initializer = NodePath("..")
 m_cellScene = ExtResource("4_f2ehu")
 m_quadrantHighlightScene = ExtResource("10_rpukv")
 m_codeLabelScene = ExtResource("11_ud5yb")
-m_boardControl = NodePath("BoardControl")
-m_highlightControl = NodePath("HighlightControl")
-m_menuButton = NodePath("HighlightControl/Button_Menu")
-m_unlockButton = NodePath("HighlightControl/Button_Unlock")
-m_resultControl = NodePath("ResultControl")
 
 [node name="BoardControl" type="Control" parent="CanvasLayer_Game"]
 layout_mode = 3
@@ -504,7 +489,7 @@ focus_mode = 0
 theme = ExtResource("8_pna5h")
 text = "Unlock"
 
-[node name="ResultControl" type="Control" parent="CanvasLayer_Game" node_paths=PackedStringArray("m_resultLabel", "m_scoreValueLabel", "m_newGameButton")]
+[node name="ResultControl" type="Control" parent="CanvasLayer_Game"]
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -514,9 +499,6 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("13_3uuv8")
-m_resultLabel = NodePath("TextureRect/Label_Result")
-m_scoreValueLabel = NodePath("TextureRect/Label_ScoreValue")
-m_newGameButton = NodePath("TextureRect/Button_ScoreNewGame")
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer_Game/ResultControl"]
 self_modulate = Color(0.239216, 0.360784, 0.345098, 1)
@@ -590,13 +572,11 @@ grow_vertical = 2
 theme = ExtResource("8_pna5h")
 text = " New Game"
 
-[node name="CanvasLayer_SaveData" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_saveDataStatContainer", "m_clearSaveButton")]
+[node name="CanvasLayer_SaveData" type="CanvasLayer" parent="."]
 layer = 5
 visible = false
 script = ExtResource("14_rgo80")
 m_saveDataStat = ExtResource("15_bxjbm")
-m_saveDataStatContainer = NodePath("Control/NinePatchRect/VBoxContainer")
-m_clearSaveButton = NodePath("Control/NinePatchRect/Button_ClearSave")
 
 [node name="Control" type="Control" parent="CanvasLayer_SaveData"]
 layout_mode = 3

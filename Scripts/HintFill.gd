@@ -1,7 +1,7 @@
 class_name HintFill
 extends Object
 
-#region other algorithm - flood fill with directional flow & filtering existing cells if not matching code
+#region - flood fill with directional flow & filtering existing cells if not matching code
 
 enum EPathResult { NONE, SUCCESS, INVALID }
 enum EFlowDir { U=1<<0, R=1<<1, L=1<<2, D=1<<3, O=1<<4 }
@@ -38,11 +38,6 @@ class FlowCell:
 		outFlowDir = _outFlowDir
 		possibleFlowDir = _outFlowDir
 
-#var processCell:Array[Vector2i] = []
-#var processCellDir:Array[int] = []
-#var processCellNew:Array[Vector2i] = []
-#var processCellDirNew:Array[int] = []
-
 var allFlowCells:Array[FlowCell] = []
 var newFlowCells:Array[FlowCell] = []
 
@@ -57,10 +52,6 @@ func start_hint(startCellData:CellData) -> void:
 	hintCellData = startCellData
 	targetBounds = vaultGame.quadrantData.get_quadrant_Bounds2i(hintCellData.oppositequadrant)
 	allFlowCells.clear()
-	#processCell.clear()
-	#processCellDir.clear()
-	#processCell.append(Vector2i(startCellData.cellx, startCellData.celly))
-	#processCellDir.append(EFlowDir.O)
 	hintValues = process_codestr_to_hintValues(hintCellData.codeStr)
 	pushHintCurrentValue = hintValues.pop_front()
 	setup_startFlowCell();
@@ -150,8 +141,6 @@ func can_flow(originFlowCell:FlowCell, flowDir:EFlowDir) -> bool:
 	return true
 	
 func flow(originFlowCell:FlowCell, flowDir:EFlowDir) -> void:
-	#var backdir:EFlowDir = inv_flow_dir(flowDir)
-	#if ( originFlowCell.fromDir & backdir == backdir): return # don't go back to any cell we can come from
 	if ( !can_flow(originFlowCell, flowDir) ):
 		originFlowCell.possibleFlowDir &= ~flowDir
 		originFlowCell.isDirty = true
@@ -256,7 +245,6 @@ func process_codestr_to_hintValues(codestr:String) -> Array[int]:
 		if digitchar.is_valid_int():
 			result.push_back(digitchar.to_int())
 	return result
-	#var _removed:int = hintValues.pop_front() # remove the hacked cell value that is the first code digit
 
 func check_existing_path(currentPath:Array[CellData], currentCode:Array[int], step:int, originFlowDir:int) -> Array[CellData]:
 	if ( currentPath.size() == currentCode.size() ): return currentPath # full path found
@@ -275,7 +263,7 @@ func check_existing_path(currentPath:Array[CellData], currentCode:Array[int], st
 		var _result:int = currentPath.resize(currentPath.size() -1)
 	return currentPath
 
-var anyUnsetCell:bool
+var anyUnsetCell:bool # Hack: use as transient value for check_existing_path (can't return multiple values > could have done a context class that include this)
 func check_path(pathOriginCellData:CellData) -> EPathResult:
 	assert(pathOriginCellData.cellState == CellData.ECellState.SET, "check_existing_path only for set cells with a code")
 	var cellsDataPath:Array[CellData] = []
@@ -315,8 +303,7 @@ func add_to_path_if_valid(result:Array[CellData], pos:Vector2i, code:int) -> Arr
 		elif ( cellData.cellState == CellData.ECellState.GUESS && cellData.guess == code):
 			result.append(cellData)
 		elif (cellData.cellState == CellData.ECellState.UNSET):
-			anyUnsetCell = true
-			#result.append(cellData)
+			anyUnsetCell = true # Hack: set a member var to avoid adding a context (+ can't return multipla values)
 	return result
 
 #endregion

@@ -5,11 +5,11 @@ extends CanvasLayer
 @export var m_cellScene:PackedScene
 @export var m_quadrantHighlightScene:PackedScene
 @export var m_codeLabelScene:PackedScene
-@export var m_boardControl:Control
-@export var m_highlightControl:Control
-@export var m_menuButton:Button
-@export var m_unlockButton:Button
-@export var m_resultControl:ResultControl
+@onready var m_boardControl:Control = $BoardControl
+@onready var m_highlightControl:Control = $HighlightControl
+@onready var m_menuButton:Button = $HighlightControl/Button_Menu
+@onready var m_unlockButton:Button = $HighlightControl/Button_Unlock
+@onready var m_resultControl:ResultControl = $ResultControl
 
 var boardXSize:int = 3
 var boardYSize:int = 7
@@ -106,7 +106,7 @@ func resolve_board() -> void:
 			hackCount += 1
 	var score:float = (1.0 - hackCount / float(cellCount)) if success else 0.0
 	update_save(success, score)
-	m_resultControl.open_result(success, score)
+	m_resultControl.show_result(success, score)
 
 func update_save(isSuccess:bool, score:float) -> void:
 	var sizeId:int = boardXSize - 3 # hack, would require a cleaner process, maybe a SaveManager return function
@@ -132,7 +132,7 @@ func clear_old_game() -> void:
 	Helpers.disable_and_hide_node(hoverCodeLabel)
 	boardResolved = false
 	hintFill.clear()
-	m_resultControl.close_result()
+	m_resultControl.hide_result()
 
 func new_game_same_size() -> void:
 	start_new_game(boardXSize, boardYSize)
@@ -149,8 +149,7 @@ func start_new_game(xsize:int = 4, ysize:int = 4) -> void:
 	for y:int in range(boardYSize):
 		for x:int in range(boardXSize):
 			var newCell:Cell = m_cellScene.instantiate()
-			newCell.game = self
-			newCell.global_position = Vector2(xtopOffset + x*64.0,ytopOffset + y*64.0)
+			newCell.initialize(self, Vector2(xtopOffset + x*64.0,ytopOffset + y*64.0))
 			
 			var code:int = randi_range(0, 9)
 			var quadrant:int = quadrantData.get_quadrant(x,y)

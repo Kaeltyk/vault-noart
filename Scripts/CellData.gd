@@ -15,6 +15,7 @@ var value:int
 var guess:int = -1
 var codeStr:String = ""
 var codeSequence:Array[int] = []
+
 func _init(_cellRef:Cell, _cellx:int, _celly:int, _cellId:int, _value:int, _quadrant:int, _oppositequadrant:int) -> void:
 	self.cellRef = _cellRef
 	self.pos.x = _cellx
