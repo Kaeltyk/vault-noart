@@ -1,20 +1,23 @@
 Resources:
 	Font: https://fonts.google.com/specimen/Comfortaa/about?preview.text=VAULT%0A123456789%0A%E2%80%A2%20&preview.size=69&preview.layout=grid&classification=Display&stroke=Sans+Serif
 		Confortaa by Johan Aakerlund - Free licence font
-	License TDB (CC0)? Creative Commons License info: https://creativecommons.org/publicdomain/zero/1.0/
-	
+
+License:
+	TDB (CC0? Creative Commons License info: https://creativecommons.org/publicdomain/zero/1.0/)
 
 TODO:
-	• game exe Icon
+	• 
 NEXT-GEN TODO:
 	• make a mode where hacked cells are already there & enough to decypher the code
 		need to investigate tech solutions to do this though
 VARIANTS: ('ART' versions)
 	• Pixel-art
-	• Flat style with lighting effects (fake reflections like Steam library, reaction to mouse)
+	• Flat style with lighting effects (fake reflections, reaction to mouse)
 	• 3D? (would be nice to test/explore HD lighting effects)
 	• Gears theme (what style would this fit?)
 
+2024-08-17
+	• Icon & Export options
 2024-08-16
 	• Clean some code/data
 2024-08-16

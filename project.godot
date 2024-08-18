@@ -13,7 +13,10 @@ config_version=5
 config/name="KaeltykVault"
 run/main_scene="res://Main.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
-config/icon="res://Resources/icon.svg"
+boot_splash/bg_color=Color(0.188235, 0.454902, 0.501961, 1)
+boot_splash/show_image=false
+boot_splash/use_filter=false
+config/icon="res://Resources/VaultIcon.svg"
 
 [debug]
 
