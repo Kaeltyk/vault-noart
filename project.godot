@@ -43,6 +43,7 @@ project/assembly_name="KaeltykVault"
 [editor]
 
 movie_writer/movie_file="D:/GodotMovies/GodotMovie.avi"
+run/main_run_args="--verbose"
 
 [input]
 

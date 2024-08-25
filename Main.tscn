@@ -1,7 +1,7 @@
 [gd_scene load_steps=18 format=3 uid="uid://d4ev3rygk1xac"]
 
 [ext_resource type="Script" path="res://Scripts/Overlay.gd" id="1_8j862"]
-[ext_resource type="FontFile" uid="uid://dpia17tudvwf1" path="res://Resources/Comfortaa-Bold.ttf" id="1_ivdue"]
+[ext_resource type="FontFile" uid="uid://dpia17tudvwf1" path="res://Resources/Comfortaa/Comfortaa-Bold.ttf" id="1_ivdue"]
 [ext_resource type="Script" path="res://Scripts/Initializer.gd" id="1_vjbns"]
 [ext_resource type="LabelSettings" uid="uid://bspekmsvysonp" path="res://LabelSetting_Title.tres" id="3_l2f2k"]
 [ext_resource type="Script" path="res://Scripts/Title.gd" id="3_tf66t"]

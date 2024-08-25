@@ -1,6 +1,6 @@
 [gd_resource type="LabelSettings" load_steps=2 format=3 uid="uid://bspekmsvysonp"]
 
-[ext_resource type="FontFile" uid="uid://dpia17tudvwf1" path="res://Resources/Comfortaa-Bold.ttf" id="1_7w5rb"]
+[ext_resource type="FontFile" uid="uid://dpia17tudvwf1" path="res://Resources/Comfortaa/Comfortaa-Bold.ttf" id="1_7w5rb"]
 
 [resource]
 font = ExtResource("1_7w5rb")
