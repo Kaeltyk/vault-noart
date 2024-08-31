@@ -11,8 +11,12 @@ extends CanvasLayer
 @onready var m_unlockButton:Button = $HighlightControl/Button_Unlock
 @onready var m_resultControl:ResultControl = $ResultControl
 
+@export var m_maxCellSize:Vector2 = Vector2(96.0, 96.0)
+
 var boardXSize:int = 3
 var boardYSize:int = 7
+var cellSize:Vector2
+var boardSizeInPixels:Vector2
 
 var currentHoveredCell:Cell
 var allCellDatas:Array[CellData] = []
@@ -50,7 +54,12 @@ func _ready() -> void:
 	hoverCodeLabel = m_codeLabelScene.instantiate()
 	m_highlightControl.add_child(hoverCodeLabel)
 	Helpers.disable_and_hide_node(hoverCodeLabel)
-	
+
+	# maybe there's a better way to get this without instantiating
+	#var newCell:Cell = m_cellScene.instantiate()
+	#cellSize = newCell.size
+	#newCell.queue_free()
+	boardSizeInPixels = m_boardControl.size
 
 	m_resultControl.setup(self)
 
@@ -144,12 +153,15 @@ func start_new_game(xsize:int = 4, ysize:int = 4) -> void:
 	boardYSize = ysize
 	quadrantData = QuadrantData.new(xsize, ysize)
 	#instantiate a grid to test
-	var xtopOffset:float = 1920/2.0 - 64.0 * (boardXSize/2.0 + 0.5)
-	var ytopOffset:float = 1080/2.0 - 64.0 * (boardYSize/2.0 + 0.5)
+	cellSize.x = min(m_maxCellSize.x, boardSizeInPixels.x / boardXSize)
+	cellSize.y = min(m_maxCellSize.y, boardSizeInPixels.y / boardYSize)
+	var xtopOffset:float = boardSizeInPixels.x/2.0 - cellSize.x * (boardXSize/2.0 + 0.5)
+	var ytopOffset:float = boardSizeInPixels.y/2.0 - cellSize.y * (boardYSize/2.0 + 0.5)
 	for y:int in range(boardYSize):
 		for x:int in range(boardXSize):
 			var newCell:Cell = m_cellScene.instantiate()
-			newCell.initialize(self, Vector2(xtopOffset + x*64.0,ytopOffset + y*64.0))
+			newCell.size = cellSize
+			newCell.initialize(self, Vector2(xtopOffset + x*cellSize.x,ytopOffset + y*cellSize.y))
 			
 			var code:int = randi_range(0, 9)
 			var quadrant:int = quadrantData.get_quadrant(x,y)
@@ -163,9 +175,11 @@ func start_new_game(xsize:int = 4, ysize:int = 4) -> void:
 	#var _result:int = hackedCodes.resize(allCells.size())
 	dbg_log_code()
 	
-	# update code labels pos according to (dynamic) board size
-	codeLabel.global_position = Vector2(xtopOffset + 64.0, ytopOffset + 64.0 * boardYSize + 64.0)
-	hoverCodeLabel.global_position = Vector2(xtopOffset + 64.0, ytopOffset - 64.0 - 64.0)
+	# update code labels pos according to (dynamic) board size & boardcontrol position
+	var codeLabelPosInBoardControlLocal:Vector2 = Vector2(xtopOffset + cellSize.x, ytopOffset + cellSize.y * boardYSize + cellSize.y)
+	codeLabel.global_position = codeLabelPosInBoardControlLocal + m_boardControl.position
+	var hoverCodeLabelPosInBoardControlLocal:Vector2 = Vector2(xtopOffset + cellSize.x, ytopOffset - cellSize.y - cellSize.y)
+	hoverCodeLabel.global_position = hoverCodeLabelPosInBoardControlLocal + m_boardControl.position
 
 
 func on_cell_enter(enteredCell: Cell) -> void:
@@ -322,11 +336,11 @@ func update_quadrant_highlight() -> void:
 		Helpers.disable_and_hide_node(quadrantHighlight)
 		return
 	Helpers.enable_and_show_node(quadrantHighlight)
-	var xtopOffset:float = 1920/2.0 - 64.0 * (boardXSize/2.0 + 0.5)
-	var ytopOffset:float = 1080/2.0 - 64.0 * (boardYSize/2.0 + 0.5)
+	var xtopOffset:float = 1920/2.0 - cellSize.x * (boardXSize/2.0 + 0.5)
+	var ytopOffset:float = 1080/2.0 - cellSize.y * (boardYSize/2.0 + 0.5)
 	var bounds:Bounds2i = quadrantData.get_quadrant_Bounds2i(cellData.oppositequadrant)
-	quadrantHighlight.global_position = Vector2(xtopOffset + 64.0*bounds.xmin, ytopOffset + 64.0*bounds.ymin)
-	quadrantHighlight.size = Vector2(64.0*(bounds.xmax-bounds.xmin+1), 64.0*(bounds.ymax-bounds.ymin+1))
+	quadrantHighlight.global_position = Vector2(xtopOffset + cellSize.x*bounds.xmin, ytopOffset + cellSize.y*bounds.ymin)
+	quadrantHighlight.size = Vector2(cellSize.x*(bounds.xmax-bounds.xmin+1), cellSize.y*(bounds.ymax-bounds.ymin+1))
 
 func update_hover_label(cellData:CellData) -> void:
 	update_label(cellData, hoverCodeLabel, ELabelPos.BOTTOM)

@@ -16,6 +16,8 @@ VARIANTS: ('ART' versions)
 	• 3D? (would be nice to test/explore HD lighting effects)
 	• Gears theme (what style would this fit?)
 
+2024-08-31
+	• Dynamic board & cell size
 2024-08-17
 	• Icon & Export options
 2024-08-16
