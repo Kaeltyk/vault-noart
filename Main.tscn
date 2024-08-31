@@ -349,7 +349,9 @@ Backspace / numpad -: clear a guess (keep pressed to swipe)
 
 Hover a hacked cell to display the code and the possible quadrant targetted
 Left Click a hacked cell to display possible unset cells values (taking into account hacked & guessed cells paths)
-Click Unlock to test your solution"
+Click Unlock to test your solution
+
+Score is based on percentage of hacked cells used for solving versus board size"
 editable = false
 context_menu_enabled = false
 shortcut_keys_enabled = false
@@ -429,7 +431,9 @@ Original code source in Basic + rules are from the 'Coffre-fort' game in 'Jeux &
 
 Re-made with Godot as a training project, after previous iterations (in Basic on Apple ][, Turbo Pascal on PC 80286 rendered in Mode 13h, Processing), with additional quality of life features for this version.
 
-Font used is 'Confortaa' by Johan Aakerlund - Free licence font - from fonts.google.com"
+Licence:
+• Font used is 'Confortaa' by Johan Aakerlund - OFL licence font - from fonts.google.com
+• Everything else done by Kaeltyk, released under CC0 Licence"
 editable = false
 context_menu_enabled = false
 shortcut_keys_enabled = false
@@ -442,6 +446,7 @@ wrap_mode = 1
 autowrap_mode = 2
 
 [node name="CanvasLayer_Game" type="CanvasLayer" parent="." node_paths=PackedStringArray("m_initializer")]
+visible = false
 script = ExtResource("8_aegs5")
 m_initializer = NodePath("..")
 m_cellScene = ExtResource("4_f2ehu")
@@ -576,7 +581,6 @@ text = " New Game"
 
 [node name="CanvasLayer_SaveData" type="CanvasLayer" parent="."]
 layer = 5
-visible = false
 script = ExtResource("14_rgo80")
 m_saveDataStat = ExtResource("15_bxjbm")
 
@@ -617,7 +621,7 @@ axis_stretch_vertical = 1
 layout_mode = 1
 offset_left = 17.0
 offset_top = 16.0
-offset_right = 230.0
+offset_right = 272.0
 offset_bottom = 57.0
 text = "• SAVE DATA •"
 label_settings = SubResource("LabelSettings_jhysy")
@@ -630,6 +634,8 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 71.0
+offset_bottom = -80.0
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
